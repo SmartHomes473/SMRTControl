@@ -5,8 +5,9 @@ import sys
 ser = serial.Serial('/dev/ttyAMA0',9600)
 
 while 1:
-	s = ser.readline()
-	print s
+	s = ser.read()
+	if s:
+		print s
 
 ser.close()
 
