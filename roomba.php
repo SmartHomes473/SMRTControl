@@ -38,6 +38,8 @@
 		}
 	?>
 
+	<a href="index.html">Go home!</a>
+
 </body>
 </html>
 
