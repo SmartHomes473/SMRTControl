@@ -8,9 +8,25 @@
 		}
 
 		$query = $db->prepare("UPDATE `Communication` SET `Status` = 1, `ExStatusLength` = ?, `ExtendedStatus` = ?");
-		$query->bind_param("ii", $len, $data);
+
+		$data_string = implode(array_map("chr", $data));
+		$query->bind_param("is", $len, $data_string);
 		$query->execute();
 	}
+
+	function create_packet()
+	{
+		$packet = array(0xFF, func_num_args());
+
+		$data = func_get_args();
+		foreach($data as $item)
+		{
+			$packet[] = $item;
+		}
+		return $packet;
+	}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -23,21 +39,46 @@
 	<h2> Control a Roomba!!! </h2>
 
 	<form method="post" action="roomba.php">
-	<input type="submit" value="DEFAULT CLEAN" name="default">
-	<input type="submit" value="MAX CLEAN" name="max">
+	<table>
+	<tr>
+		<td>
+			<input type="submit" value="DEFAULT CLEAN" name="default">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="submit" value="MAX CLEAN" name="max">
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="submit" value="SPOT CLEAN" name="spot">
+		</td>
+	</tr>
+	</table>
 	</form>
 
 	<?php
+		$packet = array(0xFF);
 		if (isset($_POST["default"]))
 		{
-			write_database(1, 1);
+			$packet = create_packet(0x02, 0x00);
+			write_database(3, $packet);
 		}
 		else if (isset($_POST["max"]))
 		{
-			write_database(5, 5);
+			$packet = create_packet(0x02, 0x01);
+			write_database(3, $packet);
+		}
+		else if (isset($_POST["spot"]))
+		{
+			$packet = create_packet(0x02, 0x02);
+			write_database(3, $packet);
 		}
 	?>
 
+	<br>
+	<br>
 	<a href="index.html">Go home!</a>
 
 </body>
