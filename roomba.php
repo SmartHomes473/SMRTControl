@@ -33,12 +33,12 @@
 	</tr>
 	<tr>
 		<td>
-			<input type="submit" value="MAX CLEAN" name="max">
+			<input type="submit" value="SPOT CLEAN" name="spot">
 		</td>
 	</tr>
 	<tr>
 		<td>
-			<input type="submit" value="SPOT CLEAN" name="spot">
+			<input type="submit" value="MAX CLEAN" name="max">
 		</td>
 	</tr>
 	</table>
@@ -51,12 +51,12 @@
 			$packet = array(0x02, 0x00);
 			write_database(count($packet), $packet);
 		}
-		else if (isset($_POST["max"]))
+		else if (isset($_POST["spot"]))
 		{
 			$packet = array(0x02, 0x01);
 			write_database(count($packet), $packet);
 		}
-		else if (isset($_POST["spot"]))
+		else if (isset($_POST["max"]))
 		{
 			$packet = array(0x02, 0x02);
 			write_database(count($packet), $packet);
