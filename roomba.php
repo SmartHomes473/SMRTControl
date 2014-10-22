@@ -13,20 +13,6 @@
 		$query->bind_param("is", $len, $data_string);
 		$query->execute();
 	}
-
-	function create_packet()
-	{
-		$packet = array(0xFF, func_num_args());
-
-		$data = func_get_args();
-		foreach($data as $item)
-		{
-			$packet[] = $item;
-		}
-		return $packet;
-	}
-
-
 ?>
 
 <!DOCTYPE html>
@@ -62,18 +48,18 @@
 		$packet = array(0xFF);
 		if (isset($_POST["default"]))
 		{
-			$packet = create_packet(0x02, 0x00);
-			write_database(3, $packet);
+			$packet = array(0x02, 0x00);
+			write_database(count($packet), $packet);
 		}
 		else if (isset($_POST["max"]))
 		{
-			$packet = create_packet(0x02, 0x01);
-			write_database(3, $packet);
+			$packet = array(0x02, 0x01);
+			write_database(count($packet), $packet);
 		}
 		else if (isset($_POST["spot"]))
 		{
-			$packet = create_packet(0x02, 0x02);
-			write_database(3, $packet);
+			$packet = array(0x02, 0x02);
+			write_database(count($packet), $packet);
 		}
 	?>
 
