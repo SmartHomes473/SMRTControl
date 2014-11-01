@@ -90,7 +90,7 @@ if (mysql1 != NULL)
         				char *value_int = row[0];
         				tx_buffer = row[1];
 
-        				//printf( "Got value:::::: %s\n", tx_buffer);
+        				printf( "Got value:::::: %s\n", tx_buffer);
         	        }
         		}
    	            mysql_free_result(result);
