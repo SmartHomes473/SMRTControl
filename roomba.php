@@ -28,6 +28,11 @@
 	<table>
 	<tr>
 		<td>
+			<input type="submit" value="INITIALIZE ROOMBA" name="init">
+		</td>
+	</tr>
+	<tr>
+		<td>
 			<input type="submit" value="DEFAULT CLEAN" name="default">
 		</td>
 	</tr>
@@ -46,7 +51,12 @@
 
 	<?php
 		$packet = array(0xFF);
-		if (isset($_POST["default"]))
+		if (isset($_POST["init"]))
+		{
+			$packet = array(0x00);
+			write_database(count($packet), $packet);
+		}
+		else if (isset($_POST["default"]))
 		{
 			$packet = array(0x02, 0x00);
 			write_database(count($packet), $packet);
