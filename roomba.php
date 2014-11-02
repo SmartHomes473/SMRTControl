@@ -33,6 +33,11 @@
 	</tr>
 	<tr>
 		<td>
+			<input type="submit" value="TEST MOVE" name="test">
+		</td>
+	</tr>
+	<tr>
+		<td>
 			<input type="submit" value="DEFAULT CLEAN" name="default">
 		</td>
 	</tr>
@@ -54,6 +59,11 @@
 		if (isset($_POST["init"]))
 		{
 			$packet = array(0x00);
+			write_database(count($packet), $packet);
+		}
+		else if (isset($_POST["test"]))
+		{
+			$packet = array(0x05);
 			write_database(count($packet), $packet);
 		}
 		else if (isset($_POST["default"]))
