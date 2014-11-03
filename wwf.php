@@ -139,13 +139,12 @@ print '
  <p>
  </p>
  <hr>
- <table style = "width:100%">
+ <table cellpadding ="5" style = "width:100%">
  <form method="post" enctype="multipart/form-data" id="cityUpdate">
  <tr>
 	<td>City #</td>
 	<td>Location</td>
-	<td>WoeID</td>	
-    <td>Condidtion</td>
+        <td>Condidtion</td>
 	<td>High</td>
 	<td>Low</td>	
 	<td>Humidity</td>
@@ -171,7 +170,6 @@ for($i = 1; $i <=5;$i++)
         print '>';
 
 	print '</td>
-           <td>' . $CurCity['WoeID'].'</td>
            <td>' . $CurCity['condition'].'</td>
 	       <td>' . $CurCity['HighTemp'] . '&deg;F</td>
 	       <td>' . $CurCity['LowTemp'] . '&deg;F</td>
