@@ -33,6 +33,11 @@
 	</tr>
 	<tr>
 		<td>
+			<input type="submit" value="SEND HOME" name="dock">
+		</td>
+	</tr>
+	<tr>
+		<td>
 			<input type="submit" value="TEST MOVE" name="test">
 		</td>
 	</tr>
@@ -59,6 +64,11 @@
 		if (isset($_POST["init"]))
 		{
 			$packet = array(0x00);
+			write_database(count($packet), $packet);
+		}
+		else if (isset($_POST["dock"]))
+		{
+			$packet = array(0x03);
 			write_database(count($packet), $packet);
 		}
 		else if (isset($_POST["test"]))
