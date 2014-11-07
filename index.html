@@ -1,64 +1,95 @@
 <html>
 <style>
+body, html { width:99% ;
+    height:100% ;
+    float:left;
+}
+
 #header {
     background-color:purple;
     color:black;
     width:100%;
     text-align:center;
-    padding:1px;
+    float:left;
 }
+
 #nav {
-    line-height:30px;
+    line-height:60px;
     background-color:black;
-    height:40px;
+    height:60px;
     width:100%;
     float:left;
-    padding:1px;
+    overflow-x:auto;
+    overflow-y:hidden;
+    white-space:nowrap;
+    text-align:left;
 }
 #section {
-    width:95%;
+    width:100%;
+    height:620px;
     float:left;
-    padding:10px; 
 }
 #footer {
-    background-color:black;
+    background-color:purple;
     color:white;
     clear:both;
     text-align:center;
-    padding:5px; 
+    float:left;
+    height:60px;
+    width:100%;
+}
+#postFooter{
+    background-color:white;
+    color:white;
+    clear:both;
+    text-align:center;
+    float:left;
+    height:400px;
+    width:100%;
+
 }
 #navelement{
-    color:yellow;
-    float:left;
-    padding:8px;
+    float: left;
 }
-<!--
+
+iframe {
+    width:100%;
+    height:100%;
+    border:none;
+    overflow:scroll;
+    float:left;
+}
 a:link{
     color: yellow ! important;
 }
 a:visited{
     color: yellow ! important;
-}-->
+}
 </style>
 
 <body align="center">
 <div id="header">
 <h1> <IMG SRC="SMRTHAUSlogoV1.png" WIDTH=60 HEIGHT=60> SMRTControl for SMRTHAUS</h1>
 </div>
-<div id="nav">
-   <div id="navelement"><a href="wwf.php">Wall Weather Forecaster</a></div>
-   <div id="navelement"><a href="roomba.php">Roomba</a></div>
-</div>
-<!-- BGCOLOR="DDA0DD" align="middle" ><h1>SMRTControl for SMRTHAUS</h1>
-<p>THIS WEBSITE IS UNDER CONTRUCTION</p>
-<p><a href="jk.html">Unless you click this link</a></p>
-<p>Test: <a href="control.php">GPIO</a> or 
-<a href="uart.php">UART</a></p>
-<p><IMG SRC="SMRTHAUSlogoV1.png" WIDTH=200 HEIGHT=200 ></p>
--->
 
+<div id="nav">
+   <a href="wwf.php" style="padding:5px">Wall Weather Forecaster</a>
+   <a href="roomba.php" style="padding:5px">Roomba</a>
+   <a href="wwf.php" style="padding:5px">Automation Device 3</a> 
+   <a href="wwf.php" style="padding:5px">Automation Device 4</a>
+   <a href="wwf.php" style="padding:5px">Automation Device 5</a> 
+   <a href="wwf.php" style="padding:5px">Automation Device 6</a> 
+   <a href="wwf.php" style="padding:5px">Automation Device 7</a>
+   <a href="wwf.php" style="padding:5px">Automation Device 8</a> 
+</div>
 <div id="section">
-<iframe src="wwf.php" style="width: 100%; height: 100%" frameboarder="0" scrolling="yes" ></iframe>
+<iframe src="wwf.php" scrolling="yes" frameBoarder="no"></iframe>
+</div>
+<div id="footer">
+<p>This be the foot</p>
+</div>
+<div id="postFooter">
+<p>This be the foot</p>
 </div>
 </body>
 </html>

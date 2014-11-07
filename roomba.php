@@ -9,7 +9,7 @@
 
 		$query = $db->prepare("UPDATE `Communication` SET `Status` = 1, `ExStatusLength` = ?, `ExtendedStatus` = ?");
 
-		$data_string = implode(array_map("chr", $data));
+		$data_string = implode(array_map("strval", $data));
 		$query->bind_param("is", $len, $data_string);
 		$query->execute();
 	}
@@ -60,37 +60,24 @@
 	</form>
 
 	<?php
-		$packet = array(0xFF);
-		if (isset($_POST["init"]))
+		$commands = [
+			"init"		=> array(0x00),
+			"dock"		=> array(0x03),
+			"test"		=> array(0x05),
+			"default"	=> array(0x02, 0x00),
+			"spot"		=> array(0x02, 0x01),
+			"max"		=> array(0x02, 0x02)
+		];
+
+		$packet = array();
+		foreach($_POST as $key => $value)
 		{
-			$packet = array(0x00);
-			write_database(count($packet), $packet);
+			if(isset($_POST[$key]))
+			{
+				$packet = $commands[$key];
+			}
 		}
-		else if (isset($_POST["dock"]))
-		{
-			$packet = array(0x03);
-			write_database(count($packet), $packet);
-		}
-		else if (isset($_POST["test"]))
-		{
-			$packet = array(0x05);
-			write_database(count($packet), $packet);
-		}
-		else if (isset($_POST["default"]))
-		{
-			$packet = array(0x02, 0x00);
-			write_database(count($packet), $packet);
-		}
-		else if (isset($_POST["spot"]))
-		{
-			$packet = array(0x02, 0x01);
-			write_database(count($packet), $packet);
-		}
-		else if (isset($_POST["max"]))
-		{
-			$packet = array(0x02, 0x02);
-			write_database(count($packet), $packet);
-		}
+		write_database(count($packet), $packet);
 	?>
 
 	<br>

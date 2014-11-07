@@ -28,28 +28,44 @@ def main() :
 			incoming = ser.read(ser.inWaiting())
 			if readState == 0:
 				i = incoming.find(chr(0x0f))
+				#Found the start delimiter
 				if i != -1:
+					#looking for an end delimiter
 					l = incoming.rfind(chr(0x04))
+					#Found the end delimiter
 					if l != -1:
+						#Sending packet which starts with start delimiter and ends with end delimiter
+						#parseBuff() will figure out how many packets are in between those delimiters
 						readpacket = incoming[i:l]
+						#Checking to see if start delimiter received after last end delimiter
 						k = incoming[l:].find(chr(0x0f))
+						#Found Start Delimiter After last end delimiter
 						if k != -1:
 							readbuffer = incoming[k:]
 							readState = 1
 					else:
 						readbuffer = incoming[i:]
 						readState = 1
+			#Found start delimiter but haven't found end delimiter yet
 			elif readState == 1:
+				#looking for an end delimiter
 				j = incoming.rfind(chr(0x04))
 				if j != -1:
+					#Setting packet with start and end delimiter, as before parseBuff() will determine 
+					#the number of packets received between those delimiters
 					readpacket = readbuffer + incoming[:j]
 					readState = 0
+					#Searching for start delimiter after last received end delimiter
 					k = incoming[j:].find(chr(0x0f))
+					#Found start delimiter after end delimiter
 					if k != -1:
 						readbuffer = incoming[k:]
 						readState = 1
+				#Did not find an end delimiter
+				#Writes contents of read buffer and continues to search for end delimiter
 				else:
 					readbuffer = readbuffer + incoming
+
 			parseBuff(readpacket)
 			readpacket = ''
 		for key in databases.keys() :
