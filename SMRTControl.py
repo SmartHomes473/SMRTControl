@@ -69,19 +69,33 @@ def main() :
 			parseBuff(readpacket)
 			readpacket = ''
 		for key in databases.keys() :
-			db = databases[key]
-			cur = mdb.connect(db[0],db[1],db[2],db[3]).cursor()
+			dbdata = databases[key]
+			db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
 			cur = db.cursor()
 			cur.execute("SELECT * FROM Communication T")
 			row = cur.fetchone()
 			if row[0] == 1:
-				#Writes Status
-				ser.write(chr(0x0f) + chr(row[0]&0xff))
-				#WritesExStatusLength
-				ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff))
-				#Write ExtendedStatus
-				ser.write(str(row[2]))
+
+				ser.write(chr(0x0f) +chr(key)+ chr(2)) #Writes Status
+				ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff)) #Writes ExStatusLeng
+				ser.write(str(row[2])) #Writes ExtendedStatus
 				ser.write(chr(4))
+				'''
+				TxData = ''
+				#Status
+				TxData = TxData + chr(0x0f) + chr((row[0]+1)&0xff)
+				print TxData
+				#ExStatusLength
+				TxData = TxData + chr((row[1]>>8)&0xff)+chr(row[1]&0xff)
+				print TxData
+				#ExtendedStatus
+				TxData = TxData + str(row[2])
+				print TxData
+				#End Delimeter
+				TxData = TxData + chr(4)
+				print TxData
+				ser.write(TxData)
+				'''
 				#deviceData[key]['sentTime'] = time.time()
 				cur.execute("UPDATE  `Communication` SET  `Status` = '2' WHERE  `Communication`.`Status` =1 LIMIT 1")
 				db.commit()

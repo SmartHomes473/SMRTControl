@@ -112,10 +112,7 @@ If($updateForecast != False)
             
             if(!isset($data->forecast->error))
             { // If no error, Parse weather information and update forecast
-                if($TxData == '')
-                {
-                    $TxData .= 'w;';
-                }
+                $TxData .= "w;";
                 $fcast = $data->forecast->simpleforecast->forecastday[0];
                 $high = $fcast->high->fahrenheit;
                 $low = $fcast->low->fahrenheit;
@@ -123,7 +120,7 @@ If($updateForecast != False)
                 $humidity = $fcast->avehumidity;
                 $pop = $fcast->pop;
                 mysql_query('UPDATE `Weather` SET `condition`="'.$text.'",`HighTemp`='.$high.',`LowTemp`='.$low.',`Humidity`='.$humidity.',`PrecipChance`='.$pop.' WHERE id='.$id);
-                $TxData .= $id.','.$Cities[$id].','.$high.','.$low.','.$humidity.','.$pop.';';
+                $TxData .= $id.';'.$Cities[$id].';'.$high.';'.$low.';'.$humidity.';'.$pop.'#';
             }
         }
     }
@@ -132,6 +129,7 @@ If($updateForecast != False)
 if($TxData != '')
 {
     $Command = 'UPDATE `Communication` SET `Status`=1, `ExStatusLength`='.strlen($TxData).', `ExtendedStatus`="'.$TxData.'" WHERE 1';
+    print $Command;
     mysql_query($Command);
 }
 // Display website
