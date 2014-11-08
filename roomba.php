@@ -20,46 +20,27 @@
 <head>
 	<title>Roomba Control!</title>
 	<link href="style_buttons.css" rel="stylesheet" type="text/css" media="screen" />
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 </head>
 
 <body>
 	<h1> Control a Roomba!!! </h1>
 
-	<a href="#" class="button tick"></a>
-	<form method="post" action="roomba.php">
-	<table>
-	<tr>
-		<td>
-			<input type="submit" value="INITIALIZE ROOMBA" name="init">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input type="submit" value="SEND HOME" name="dock">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input type="submit" value="TEST MOVE" name="test">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input type="submit" value="DEFAULT CLEAN" name="default">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input type="submit" value="SPOT CLEAN" name="spot">
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input type="submit" value="MAX CLEAN" name="max">
-		</td>
-	</tr>
-	</table>
-	</form>
+	<script type="text/javascript">
+		function button_clicked(button)
+		{
+			alert(button);
+			//$.post("roomba.php", button);
+		}
+	</script>
+
+
+	<a href="#0" onclick=button_clicked("clean"); class="button clean"></a>
+	<a href="#0" onclick=button_clicked("spot"); class="button spot"></a>
+	<a href="#0" onclick=button_clicked("max"); class="button max"></a>
+	<a href="#0" onclick=button_clicked("dock"); class="button dock"></a>
+
+	
 
 	<?php
 		$commands = [
