@@ -1,0 +1,71 @@
+body, html { 
+	width:99%;
+    height:100%;
+    float:left;
+}
+
+iframe {
+    width:100%;
+    height:100%;
+    border:none;
+    overflow:scroll;
+    float:left;
+}
+
+a{
+	padding: 5px;
+}
+
+a:link{
+    color: yellow ! important;
+}
+a:visited{
+    color: yellow ! important;
+}
+
+#header {
+    background-color:purple;
+    color:black;
+    width:100%;
+    text-align:center;
+    float:left;
+}
+
+#nav {
+    line-height:60px;
+    background-color:black;
+    height:60px;
+    width:100%;
+    float:left;
+    overflow-x:auto;
+    overflow-y:hidden;
+    white-space:nowrap;
+    text-align:left;
+}
+#section {
+    width:100%;
+    height:620px;
+    float:left;
+}
+#footer {
+    background-color:purple;
+    color:white;
+    clear:both;
+    text-align:center;
+    float:left;
+    height:60px;
+    width:100%;
+}
+#postFooter{
+    background-color:white;
+    color:white;
+    clear:both;
+    text-align:center;
+    float:left;
+    height:400px;
+    width:100%;
+
+}
+#navelement{
+    float: left;
+}
