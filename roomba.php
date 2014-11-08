@@ -22,7 +22,7 @@
 </head>
 
 <body>
-	<h2> Control a Roomba!!! </h2>
+	<h1> Control a Roomba!!! </h1>
 
 	<form method="post" action="roomba.php">
 	<table>
@@ -79,13 +79,5 @@
 		}
 		write_database(count($packet), $packet);
 	?>
-
-	<br>
-	<br>
-	<a href="index.html">Go home!</a>
-
 </body>
 </html>
-
-
-
