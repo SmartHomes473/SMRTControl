@@ -29,8 +29,7 @@
 	<script type="text/javascript">
 		function button_clicked(button)
 		{
-			alert(button);
-			//$.post("roomba.php", button);
+			$.post("roomba.php", button);
 		}
 	</script>
 
