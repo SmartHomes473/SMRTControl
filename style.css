@@ -12,15 +12,19 @@ iframe {
     float:left;
 }
 
-a{
+a {
 	padding: 5px;
 }
 
-a:link{
+a:link {
     color: yellow ! important;
 }
-a:visited{
+a:visited {
     color: yellow ! important;
+}
+
+h1 {
+	text-align:center;
 }
 
 #header {

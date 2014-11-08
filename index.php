@@ -1,70 +1,65 @@
+<?php
+	/* Function takes a dictionary of Device name => device php page */
+	function create_navbar($devices)
+	{
+		foreach($devices as $key => $value)
+		{
+			echo '<a href="' . $value . '" target="content_iframe">' . $key . '</a>';
+		}
+	}
+?>
+
+<!DOCTYPE html>
 <html>
-<style>
-#header {
-    background-color:purple;
-    color:black;
-    width:100%;
-    text-align:center;
-    padding:1px;
-}
-#nav {
-    line-height:30px;
-    background-color:black;
-    height:75px;
-    width:100%;
-    float:left;
-    padding:1px;
-    overflow-x: scroll;
-}
-#section {
-    width:100%;
-    float:left;
-    padding:10px; 
-}
-#footer {
-    background-color:black;
-    color:white;
-    clear:both;
-    text-align:center;
-    padding:5px; 
-}
-#navelement{
-    color:yellow;
-    float:left;
-    padding-right:8px;
-}
-<!--
-a:link{
-    color: yellow ! important;
-}
-a:visited{
-    color: yellow ! important;
-}-->
-</style>
+<head>
+	<link href="style.css" rel="stylesheet" type="text/css" />
+	<title>SMRTHAUS</title>
+</head>
+
 
 <body align="center">
-<div id="header">
-<h1> <IMG SRC="SMRTHAUSlogoV1.png" WIDTH=60 HEIGHT=60> SMRTControl for SMRTHAUS</h1>
-</div>
-<div id="nav">
-   <div id="navelement"><a href="wwf.php">Wall Weather Forecaster</a></div>
-   <div id="navelement"><a href="wwf.php">Wall Weather Forecaster</a></div>
-   <div id="navelement"><a href="wwf.php">Wall Weather Forecaster</a></div>
-   <div id="navelement"><a href="wwf.php">Wall Weather Forecaster</a></div>
-   <div id="navelement"><a href="wwf.php">Wall Weather Forecaster</a></div>
-   <div id="navelement"><a href="wwf.php">Wall Weather Forecaster</a></div>
-   <div id="navelement"><a href="roomba.php">Roomba</a></div>
-</div>
-<!-- BGCOLOR="DDA0DD" align="middle" ><h1>SMRTControl for SMRTHAUS</h1>
-<p>THIS WEBSITE IS UNDER CONTRUCTION</p>
-<p><a href="jk.html">Unless you click this link</a></p>
-<p>Test: <a href="control.php">GPIO</a> or 
-<a href="uart.php">UART</a></p>
-<p><IMG SRC="SMRTHAUSlogoV1.png" WIDTH=200 HEIGHT=200 ></p>
--->
+	<div id="header">
+		<h1> <IMG SRC="SMRTHAUSlogoV1.png" WIDTH=60 HEIGHT=60> SMRTControl for SMRTHAUS</h1>
+	</div>
 
-<div id="section">
-<iframe src="wwf.php" style="width: 100%; height: 1000px" frameBorder="0" scrolling="yes" ></iframe>
-</div>
+	<div id="nav">
+	<?php
+		/* Will eventually have a way to generate this table */
+		$devices = [
+			"Wall Weather Forecaster"	=> "wwf.php",
+			"Roomba"					=> "roomba.php",
+			"Automation Device 3"		=> "wwf.php",
+			"Automation Device 4"		=> "wwf.php",
+			"Automation Device 5"		=> "wwf.php",
+			"Automation Device 6"		=> "wwf.php",
+			"Automation Device 7"		=> "wwf.php",
+			"Automation Device 8"		=> "wwf.php",
+		];
+
+		create_navbar($devices);	
+	?>
+		<!--
+	   <a href="wwf.php" target="content_iframe">Wall Weather Forecaster</a>
+	   <a href="roomba.php" target="content_iframe">Roomba</a>
+	   <a href="wwf.php" target="content_iframe">Automation Device 3</a> 
+	   <a href="wwf.php" target="content_iframe">Automation Device 4</a>
+	   <a href="wwf.php" target="content_iframe">Automation Device 5</a> 
+	   <a href="wwf.php" target="content_iframe">Automation Device 6</a> 
+	   <a href="wwf.php" target="content_iframe">Automation Device 7</a>
+	   <a href="wwf.php" target="content_iframe">Automation Device 8</a> 
+		-->
+	</div>
+
+	<div id="section">
+		<iframe src="wwf.php" scrolling="yes" frameBoarder="no" name="content_iframe"></iframe>
+	</div>
+
+	<div id="footer">
+		<p>This be the foot</p>
+	</div>
+
+	<div id="postFooter">
+		<p>This be the foot</p>
+	</div>
 </body>
 </html>
