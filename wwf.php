@@ -27,13 +27,8 @@ if(isset($_POST['updateSettings']))
 
 // Setup variables from database settings
 $settings = mysql_fetch_array(mysql_query("SELECT * FROM `Settings` WHERE id=1"));
+
 $updateForecast = False;
-
-// Setup updateForcast if Perodic update
-if($settings['updateMode'] % 1) 
-    if( 0 > time() - ($settings['lastUpdate']+$settings['updateDelay']))
-        $updateForcast = True;
-
 // Check for updated cities
 $CitySuccess = NULL;
 If(isset($_POST['updateCities']))
@@ -49,7 +44,7 @@ If(isset($_POST['updateCities']))
         $Cities[$i] = $CurCity;
         $WoeIDs[$i] = $q['WoeID'];
 
-        If( (!empty($SetCity)) And ($SetCity != $CurCity))
+        If(((!empty($SetCity)) And ($SetCity != $CurCity)))
         { // Attempt to get new zwm/city name from underground weather
             // Send Query with input city name
             $url = 'http://autocomplete.wunderground.com/aq?query='.urlencode($SetCity).'&format=json';
@@ -102,47 +97,55 @@ if(!isset($Cities) || !isset($WoeIDs))
         $row =mysql_fetch_array($q1);
     }
 }
-
+$TxData = '';
 If($updateForecast != False)
 { // Update each city's forcast
     foreach($WoeIDs as $id => $woeid)
     {
-        // Query Weather Underground for city's forecast
-        $session = curl_init('http://api.wunderground.com/api/baac712bb6c0b326/forecast/q/zmw:'.$WoeIDs[$id].'.json');
-        curl_setopt($session, CURLOPT_RETURNTRANSFER,true);      
-        $json = curl_exec($session);
-        $data = json_decode($json);
-        
-        if(!isset($data->forecast->error))
-        { // If no error, Parse weather information and update forecast
-            $fcast = $data->forecast->simpleforecast->forecastday[0];
-            $high = $fcast->high->fahrenheit;
-            $low = $fcast->low->fahrenheit;
-            $text = $fcast->conditions;
-            $humidity = $fcast->avehumidity;
-            $pop = $fcast->pop;
-            mysql_query('UPDATE `Weather` SET `condition`="'.$text.'",`HighTemp`='.$high.',`LowTemp`='.$low.',`Humidity`='.$humidity.',`PrecipChance`='.$pop.' WHERE id='.$id);
+        if($CitySuccess[$id] == 1)
+        {
+            // Query Weather Underground for city's forecast
+            $session = curl_init('http://api.wunderground.com/api/baac712bb6c0b326/forecast/q/zmw:'.$WoeIDs[$id].'.json');
+            curl_setopt($session, CURLOPT_RETURNTRANSFER,true);      
+            $json = curl_exec($session);
+            $data = json_decode($json);
+            
+            if(!isset($data->forecast->error))
+            { // If no error, Parse weather information and update forecast
+                $TxData .= "w;";
+                $fcast = $data->forecast->simpleforecast->forecastday[0];
+                $high = $fcast->high->fahrenheit;
+                $low = $fcast->low->fahrenheit;
+                $text = $fcast->conditions;
+                $humidity = $fcast->avehumidity;
+                $pop = $fcast->pop;
+                mysql_query('UPDATE `Weather` SET `condition`="'.$text.'",`HighTemp`='.$high.',`LowTemp`='.$low.',`Humidity`='.$humidity.',`PrecipChance`='.$pop.' WHERE id='.$id);
+                $TxData .= $id.';'.$Cities[$id].';'.$high.';'.$low.';'.$humidity.';'.$pop.'#';
+            }
         }
     }
 }
-
+// Update WWF if necessary
+if($TxData != '')
+{
+    $Command = 'UPDATE `Communication` SET `Status`=1, `ExStatusLength`='.strlen($TxData).', `ExtendedStatus`="'.$TxData.'" WHERE 1';
+    print $Command;
+    mysql_query($Command);
+}
 // Display website
 print '
- <html>
+ <html style="height:600px">
+ <style> 
+    ::-webkit-input-placeholder {
+        color : black;
+    }
+ </style>
  <head>
- <title>Wall Weather Forcaster</title>
- </head>
- <font face = "verdana">
- <p><a href="/"> Home</a></p>
- <br>
  <body>
- <p>
- </p>
- <hr>
+ <p style="text-align:center"><font size = 7 > Current Weather Forecast</font></p>
  <table cellpadding ="5" style = "width:100%">
  <form method="post" enctype="multipart/form-data" id="cityUpdate">
  <tr>
-	<td>City #</td>
 	<td>Location</td>
         <td>Condidtion</td>
 	<td>High</td>
@@ -157,7 +160,6 @@ for($i = 1; $i <=5;$i++)
     $CurCity = mysql_fetch_array(mysql_query("SELECT `Location`,`WoeID`,`HighTemp`,`condition`,`LowTemp`,`Humidity`,`PrecipChance`
  FROM `Weather` WHERE id=" . $i ));
     print '<tr> 
-	       <td>'.$i.'</td>
 	       <td><input type="text" name="c'. $i .'" placeholder="'.$Cities[$i].'" ';
     if(isset($CitySuccess))
     {    
@@ -180,12 +182,12 @@ for($i = 1; $i <=5;$i++)
 }
 print '
  <tr>
- <td></td>
  <td><input type="submit" name="updateCities" value="Update Cities"></td>
  </tr>
  </form>
  </table>
  <hr>
+ <p style="text-align:center"><font size = 7 > Settings </font></p>
  <table>
  <form method="post" enctype="multipart/form-data" id="settingsUpdate">
  <tr>
@@ -214,12 +216,11 @@ foreach( $settings as $key => $value)
     }
 }
 print '
- <tr><td></td><td><input type="submit" name="updateSettings" value="Update Settings"></td></tr>
+ <tr><td><input type="submit" name="updateSettings" value="Update Settings"></td></tr>
  </table>
  <script>
 
  </script>
  </body>
- </font>
  </html>';
 ?>
