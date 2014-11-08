@@ -38,16 +38,6 @@
 
 		create_navbar($devices);	
 	?>
-		<!--
-	   <a href="wwf.php" target="content_iframe">Wall Weather Forecaster</a>
-	   <a href="roomba.php" target="content_iframe">Roomba</a>
-	   <a href="wwf.php" target="content_iframe">Automation Device 3</a> 
-	   <a href="wwf.php" target="content_iframe">Automation Device 4</a>
-	   <a href="wwf.php" target="content_iframe">Automation Device 5</a> 
-	   <a href="wwf.php" target="content_iframe">Automation Device 6</a> 
-	   <a href="wwf.php" target="content_iframe">Automation Device 7</a>
-	   <a href="wwf.php" target="content_iframe">Automation Device 8</a> 
-		-->
 	</div>
 
 	<div id="section">

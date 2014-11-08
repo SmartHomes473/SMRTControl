@@ -18,12 +18,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Roomba Control!</title>
+	<title>Roomba Control!</title>
+	<link href="style_buttons.css" rel="stylesheet" type="text/css" media="screen" />
 </head>
 
 <body>
 	<h1> Control a Roomba!!! </h1>
 
+	<a href="#" class="button tick"></a>
 	<form method="post" action="roomba.php">
 	<table>
 	<tr>
