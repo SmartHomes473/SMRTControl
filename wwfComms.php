@@ -24,15 +24,30 @@ print "Status: \t\t".$CommData['Status']."
 Extended Status Length:\t".$CommData['ExStatusLength']."
 Exteded Status Data: \t".$CommData['ExtendedStatus']."
 ";
+function GetCityWeather($cities){
+	$TxData = '';
+	foreach($cities as $id)
+	{
+    	$row = mysql_fetch_array(mysql_query("SELECT `id`, `Location`, `HighTemp`, `LowTemp`, `Humidity`, `PrecipChance` FROM `Weather` WHERE id=" . $id));
+    	$location = $row['Location'];
+        $high = $row['HighTemp'];
+        $low = $row['LowTemp'];
+        $humidity = $row['Humidity'];
+        $pop = $row['PrecipChance'];
+		$TxData .='w;'.$id.';'.$location.';'.$high.';'.$low.';'.$humidity.';'.$pop.'#';
+	}
+	return $TxData;
+}
 
+# Process stuff
 switch ( $CommData['Status'] )
 {
 	case $TransmitAcknowledge:
 		// TX Acknowledged
 		// Process Acknowledge data. Extract data, Setup next packet or return to IDLE.
 		print "Performing TransmitAcknowledge\n";
-    	$Command = 'UPDATE `Communication` SET `Status`=0 WHERE 1';
-   	 	mysql_query($Command);
+    	$query = 'UPDATE `Communication` SET `Status`=0 WHERE 1';
+   	 	mysql_query($query);
 		break;
 	case $TransmitTimeout:
 		// TX timed out
@@ -43,5 +58,24 @@ switch ( $CommData['Status'] )
 		// RX Packet
 		// Process recieved packet. Setup Acknowledge to send back.
 		print "Processing Receieved Packet\n";
+		$Data = $CommData['ExtendedStatus'];
+		$TxData = '';
+		$index = 0;
+		while($index < strlen($Data))
+		{
+			$command = $Data[$index];
+			$index +=1;
+			switch($command)
+			{
+				case "w" :
+
+				break;
+				case "f" :
+					$TxData .= $TxData.GetCityWeather([1,2,3,4,5]);
+				break;
+			}
+		}
+    	$query = 'UPDATE `Communication` SET `Status`=6, `ExStatusLength`='.strlen($TxData).', `ExtendedStatus`="'.$TxData.'" WHERE 1';
+   	 	mysql_query($query);
 		break;
 }

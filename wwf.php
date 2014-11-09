@@ -128,8 +128,8 @@ If($updateForecast != False)
 // Update WWF if necessary
 if($TxData != '')
 {
+    print $TxData;
     $Command = 'UPDATE `Communication` SET `Status`=1, `ExStatusLength`='.strlen($TxData).', `ExtendedStatus`="'.$TxData.'" WHERE 1';
-    print $Command;
     mysql_query($Command);
 }
 // Display website
