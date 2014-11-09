@@ -1,3 +1,12 @@
+h1 {
+	text-align:center;
+}
+
+#buttons {
+	width: 750px;
+	margin: 0 auto 0 auto;
+}
+
 .button{
 	background-image: -webkit-linear-gradient(top, #f4f1ee, #fff);
 	background-image: linear-gradient(top, #f4f1ee, #fff);
@@ -13,7 +22,7 @@
 }
 
 .button:after{
-	color:#e9e6e4;
+	color:#CBCAC9;
 	content: "";
 	display: block;
 	font-size: 30px;
@@ -25,8 +34,8 @@
 }
 
 .button:hover{
-	background-image: -webkit-linear-gradient(top, #fff, #f4f1ee);
-	background-image: linear-gradient(top, #fff, #f4f1ee);
+	background-image: -webkit-linear-gradient(top, #f4f1ee, #fff);
+	background-image: linear-gradient(top, #f4f1ee, #fff);
 	color:#0088cc;
 }
 
