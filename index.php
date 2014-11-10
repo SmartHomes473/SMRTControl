@@ -39,7 +39,7 @@
 	</div>
 
 	<div id="section">
-		<iframe src="wwf.php" scrolling="yes" frameBoarder="no" name="content_iframe"></iframe>
+		<iframe src="wwf/wwf.php" scrolling="yes" frameBoarder="no" name="content_iframe"></iframe>
 	</div>
 
 	<div id="footer">
