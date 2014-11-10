@@ -13,7 +13,7 @@ databases = {
 };
 
 deviceData = {
-    1 : { 'sentTime':0,'Comms':'wwfComms.php'}, 
+    1 : { 'sentTime':0,'Comms':'wwf/wwfComms.php'}, 
     2 : { 'sentTime':0,'Comms':'roombaComms.php'}
 }
 
