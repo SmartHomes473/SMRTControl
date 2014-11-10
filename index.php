@@ -24,17 +24,15 @@
 
 	<div id="nav">
 	<?php
-		/* Will eventually have a way to generate this table */
-		$devices = [
-			"Wall Weather Forecaster"	=> "wwf.php",
-			"Roomba"					=> "roomba.php",
-			"Automation Device 3"		=> "wwf.php",
-			"Automation Device 4"		=> "wwf.php",
-			"Automation Device 5"		=> "wwf.php",
-			"Automation Device 6"		=> "wwf.php",
-			"Automation Device 7"		=> "wwf.php",
-			"Automation Device 8"		=> "wwf.php",
-		];
+		/* Generate the list of devices */
+		$device_list = file("devices.txt");
+
+		$devices = array();
+		foreach ($device_list as $line)
+		{
+			$device_entry = explode(",", $line);
+			$devices[$device_entry[1]] = $device_entry[0] . "/" . $device_entry[0] . ".php";
+		}
 
 		create_navbar($devices);	
 	?>
