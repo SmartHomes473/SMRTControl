@@ -2,3 +2,9 @@ uart,UART
 roomba,Roomba
 wwf,Wall Weather Forecaster
 
+roomba,Roomba
+
+roomba,Roomba
+
+roomba,Roomba
+
