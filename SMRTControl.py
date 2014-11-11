@@ -13,16 +13,16 @@ databases = {
 };
 
 deviceData = {
-    1 : { 'sentTime':0,'Comms':'wwfComms.php'}, 
-    2 : { 'sentTime':0,'Comms':'roombaComms.php'}
+    1 : { 'prevCommStatus':0,'sentTime':0,'WatchDog':0,'Comms':'wwf/wwfComms.php'}, 
+    2 : { 'prevCommStatus':0,'sentTime':0,'WatchDog':0,'Comms':'roombaComms.php'}
 }
 
 def parseBuff(buff):
 	i = 0
-	while len(buff) > i:
-		print ord(buff[i]),
-		i +=1
-	print "END"
+	#while len(buff) > i:
+	#	print ord(buff[i]),
+	#		i +=1
+	#print "END"
 	beginD = buff.find(chr(0x0f))
 	endD = buff.find(chr(0x04))
 	while (beginD != -1 and endD != -1) :
@@ -31,6 +31,7 @@ def parseBuff(buff):
 		status = ord(buff[beginD+2])
 		length = ord(buff[beginD+3])<<8 + ord(buff[beginD+4])
 		# Connect to device database 
+		#print dev
 		dbdata = databases[dev]
 		db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
 		cur = db.cursor()
@@ -44,7 +45,7 @@ def parseBuff(buff):
 				",`ExStatusLength`="+str(length)+",`ExtendedStatus`=\""+buff[beginD+5:endD]+\
 				"\" WHERE 1")
 			db.commit()
-			print ['php',deviceData[dev]['Comms']]
+			#print ['php',deviceData[dev]['Comms']]
 			subprocess.call(['php',deviceData[dev]['Comms']])
 		# prep for next packet.
 		beginD = buff.find(chr(0x0f),endD)
@@ -60,10 +61,10 @@ def main() :
 		if ser.inWaiting() != 0:
 			incoming = ser.read(ser.inWaiting())
 			i = 0
-			while len(incoming) > i:
-				print ord(incoming[i]),
-				i +=1
-			print "END"
+			#while len(incoming) > i:
+			#	print ord(incoming[i]),
+			#	i +=1
+			#print "END"
 			if readState == 0:
 				i = incoming.find(chr(0x0f))
 				#Found the start delimiter
@@ -75,11 +76,11 @@ def main() :
 						#Sending packet which starts with start delimiter and ends with end delimiter
 						#parseBuff() will figure out how many packets are in between those delimiters
 						readpacket = incoming[i:(l+1)]
-						print i,l,readpacket
-						while len(readpacket) > i:
-							print ord(readpacket[i]),
-							i +=1
-						print "END"
+						#print i,l,readpacket
+						#while len(readpacket) > i:
+						#	print ord(readpacket[i]),
+						#	i +=1
+						#print "END"
 						#Checking to see if start delimiter received after last end delimiter
 						k = incoming[l:].find(chr(0x0f))
 						#Found Start Delimiter After last end delimiter
@@ -113,41 +114,46 @@ def main() :
 			readpacket = ''
 		for key in databases.keys() :
 			dbdata = databases[key]
+			#print dbdata
 			db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
 			cur = db.cursor()
-			cur.execute("SELECT * FROM Communication T")
+			cur.execute("SELECT * FROM `Communication` WHERE 1")
 			row = cur.fetchone()
+			# Comms Watchdog: prevents non zero state for more than 5 seconds.
+			if row[0] == 0 and deviceData[key]['prevCommStatus'] != 0:
+				deviceData[key]['Watchdog'] = 0
+				deviceData[key]['prevCommStatus'] = 0
+			elif row[0] != 0: 
+				if deviceData[key]['prevCommStatus'] != row[0]:
+					deviceData[key]['Watchdog'] = time.time()
+					deviceData[key]['prevCommStatus'] = row[0]
+				else:
+					curtime = time.time()
+					if (curtime - deviceData[key]['Watchdog']) > 5 :
+						cur.execute("UPDATE  `Communication` SET  `Status` =0 WHERE 1")
+						db.commit()
+					
+			# Check for Send Packet or Send Reply
 			if row[0] == 1 or row[0] == 6:
+				# Prep send status
 				if(row[0] == 1) :
 					status = chr(2)
 				else:
 					status = chr(6)
+
+				# Send Packet
 				ser.write(chr(0x0f) +chr(key)+ status) #Writes Status
 				ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff)) #Writes ExStatusLeng
 				ser.write(str(row[2])) #Writes ExtendedStatus
 				ser.write(chr(4))
 				print "Sending: "+str(row[0])+" "+str(row[2])
-				'''
-				TxData = ''
-				#Status
-				TxData = TxData + chr(0x0f) + chr((row[0]+1)&0xff)
-				print TxData
-				#ExStatusLength
-				TxData = TxData + chr((row[1]>>8)&0xff)+chr(row[1]&0xff)
-				print TxData
-				#ExtendedStatus
-				TxData = TxData + str(row[2])
-				print TxData
-				#End Delimeter
-				TxData = TxData + chr(4)
-				print TxData
-				ser.write(TxData)
-				'''
+
+				# Update sent time and next status
 				deviceData[key]['sentTime'] = time.time()
 				nstatus = str(2*(row[0] == 1))
-				print "Next Status ="+nstatus
 				cur.execute("UPDATE  `Communication` SET  `Status` ="+nstatus+" WHERE 1")
 				db.commit()
+			# Check for packet delay
 			elif row[0] == 2:
 				curTime = time.time()
 				if curTime - deviceData[key]['sentTime'] > 1 :
