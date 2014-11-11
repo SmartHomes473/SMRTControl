@@ -15,10 +15,16 @@ def main():
 	call(["tar", "-C", product_name, "-zxf", file_name])
 	call(["rm", file_name])
 
-	#get the device name
 	device_name = None
-	with open(product_name + "/NAME.txt") as name_file:
-		device_name = name_file.read()
+	homepage = None
+	commpage = None
+	sql_file = None
+	with open(product_name + "/config.txt") as config_file:
+		lines = config_file.readlines();
+		device_name = lines[0][lines[0].find(": "):]
+		homepage = lines[1][lines[1].find(": "):]
+		commpage = lines[2][lines[2].find(": "):]
+		sql_file = lines[3][lines[3].find(": "):]
 
 	#remove unnecessary file
 	call(["rm", product_name + "/NAME.txt"])
