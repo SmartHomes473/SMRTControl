@@ -43,7 +43,6 @@ def main():
 	sql = None
 	with open(folder_name + "/" + config_info["SQL"], "r") as sql_file:
 		sql = sql_file.read()
-
 		#delimit the file on semicolons without removing them
 		sql_queries = [e+";" for e in sql.split(";") if e != ""]
 

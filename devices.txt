@@ -1,1 +1,2 @@
+wwf,Wall Weather Forecaster,wwf.php,wwfComms.php,wwfSample
 roomba,Roomba,roomba.php,roombaComms.php,roomba
