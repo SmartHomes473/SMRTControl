@@ -8,13 +8,9 @@ import subprocess
 
 ser = serial.Serial('/dev/ttyAMA0',9600)
 databases = { 
-	1 : ['localhost', 'root', 'smarthouse', 'wwfSample'],
-	2 : ['localhost', 'root', 'smarthouse', 'roomba']
 };
 
 deviceData = {
-    1 : { 'prevCommStatus':0,'sentTime':0,'WatchDog':0,'Comms':'wwf/wwfComms.php'}, 
-    2 : { 'prevCommStatus':0,'sentTime':0,'WatchDog':0,'Comms':'roombaComms.php'}
 }
 
 def parseBuff(buff):
@@ -51,11 +47,32 @@ def parseBuff(buff):
 		beginD = buff.find(chr(0x0f),endD)
 		endD = buff.find(chr(0x04),beginD)
 
-
 def main() :
 	readState = 0
 	readbuffer = ''
 	readpacket = ''
+
+	# Organization of each line in devices.txt:
+	#  folder name, displayed name, homepage, rxpage, database name
+	count = 1
+	pdb.set_trace()
+	with open("devices.txt", "r") as device_file:
+		for line in device_file:
+			device_line = line.split(',')
+			device_line[4] = device_line[4].replace("\n", "")
+
+			#update database list
+			databases_list = ['localhost', 'root', 'smarthouse']
+			databases_list.append(device_line[4])
+			databases[count] = databases_list
+
+			#update device_data list
+			device_data_item = {'prevCommStatus':0,'sentTime':0,'WatchDog':0} 
+			device_data_item["Comms"] = device_line[0] + "/" + device_line[3]
+			deviceData[count] = device_data_item
+
+			count += 1
+			
 
 	while 1:
 		if ser.inWaiting() != 0:

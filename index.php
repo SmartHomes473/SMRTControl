@@ -27,11 +27,15 @@
 		/* Generate the list of devices */
 		$device_list = file("devices.txt");
 
+		/* Organization of each line in devices.txt:
+		 * folder name, displayed name, homepage, rxpage, database name
+		*/
+
 		$devices = array();
 		foreach ($device_list as $line)
 		{
 			$device_entry = explode(",", $line);
-			$devices[$device_entry[1]] = $device_entry[0] . "/" . $device_entry[0] . ".php";
+			$devices[$device_entry[1]] = $device_entry[0] . "/" . $device_entry[2];
 		}
 
 		create_navbar($devices);	
