@@ -1,5 +1,5 @@
 from subprocess import call
-#import MySQLdb as mdb
+import MySQLdb as mdb
 import sys
 import pdb
 
@@ -40,8 +40,13 @@ def main():
 
 	sql = None
 	with open(folder_name + "/" + config_info["SQL"], "r") as sql_file:
-		sql = sql_file.read().replace('\n', '')
-	cursor.execute(sql)	
+		sql = sql_file.read()
+		sql_queries = [e+";" for e in sql.split(";") if e != ""]
+		sql_queries = sql_queries[:-1]
+		for query in sql_queries:
+			query = query.replace("\n", "")
+			cursor.execute(query)
+			db.commit()
 
 
 if __name__ == "__main__":
