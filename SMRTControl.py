@@ -55,7 +55,6 @@ def main() :
 	# Organization of each line in devices.txt:
 	#  folder name, displayed name, homepage, rxpage, database name
 	count = 1
-	pdb.set_trace()
 	with open("devices.txt", "r") as device_file:
 		for line in device_file:
 			device_line = line.split(',')
