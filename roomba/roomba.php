@@ -27,9 +27,9 @@
     
 	<br>
 	<div id="music">
-		<a href="#0" onclick="button_clicked('song1');"><img src="music.png" /></a>
-		<a href="#0" onclick="button_clicked('song2');"><img src="music.png" /></a>
-		<a href="#0" onclick="button_clicked('song3');"><img src="music.png" /></a>
+		<a href="#0" onclick="button_clicked('song1');"><img src="music.PNG" /></a>
+		<a href="#0" onclick="button_clicked('song2');"><img src="music.PNG" /></a>
+		<a href="#0" onclick="button_clicked('song3');"><img src="music.PNG" /></a>
 	</div>
 
 </body>
