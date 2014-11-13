@@ -25,6 +25,10 @@
 		<a href="#0" onclick="button_clicked('max');" class="button max"></a>
 		<a href="#0" onclick="button_clicked('dock');" class="button dock"></a>
 	</div>
+    
+    <a href="#0" onclick="button_clicked('song1');"> Song 1 </a>
+    <a href="#0" onclick="button_clicked('song2');"> Song 2 </a>
+    <a href="#0" onclick="button_clicked('song3');"> Song 3 </a>
 
 </body>
 </html>

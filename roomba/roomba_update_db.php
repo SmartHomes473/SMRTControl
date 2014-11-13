@@ -20,7 +20,10 @@
 			"test"		=> array(0x05),
 			"default"	=> array(0x02, 0x00),
 			"spot"		=> array(0x02, 0x01),
-			"max"		=> array(0x02, 0x02)
+            "max"		=> array(0x02, 0x02),
+            "song1"      => array(0x06, 0x01), 
+            "song2"      => array(0x06, 0x02), 
+            "song3"      => array(0x06, 0x03) 
 		];
 
 	$packet = array();
