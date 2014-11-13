@@ -2,6 +2,12 @@ h1 {
 	text-align:center;
 }
 
+#music {
+	width: 600px;	
+	margin: 0 auto 0 auto;
+	clear: both;
+}
+
 #buttons {
 	width: 750px;
 	margin: 0 auto 0 auto;

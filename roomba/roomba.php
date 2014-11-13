@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,9 +25,12 @@
 		<a href="#0" onclick="button_clicked('dock');" class="button dock"></a>
 	</div>
     
-    <a href="#0" onclick="button_clicked('song1');"> Song 1 </a>
-    <a href="#0" onclick="button_clicked('song2');"> Song 2 </a>
-    <a href="#0" onclick="button_clicked('song3');"> Song 3 </a>
+	<br>
+	<div id="music">
+		<a href="#0" onclick="button_clicked('song1');"><img src="music.png" /></a>
+		<a href="#0" onclick="button_clicked('song2');"><img src="music.png" /></a>
+		<a href="#0" onclick="button_clicked('song3');"><img src="music.png" /></a>
+	</div>
 
 </body>
 </html>
