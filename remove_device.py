@@ -32,7 +32,6 @@ def main():
 	db.commit()
 
 	#delete folder
-	pdb.set_trace()
 	call(["rm", "-rf", folder])
 
 
