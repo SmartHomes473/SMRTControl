@@ -15,13 +15,14 @@ def main():
 		for line in device_file:
 			device_line = line.split(",")	
 
-			if device_line[1] == device_to_remove:
+			if device_line[2] == device_to_remove:
 				folder = device_line[0]
 				database = device_line[4].replace("\n", "")
 			else:
 				with open("devices_new.txt", "w") as newdevice_file:
 					newdevice_file.write(line)
 
+	call(["chmod", "666", "devices_new.txt"])
 	call(["mv", "devices_new.txt", "devices.txt"])	
 
 	#drop database
@@ -32,6 +33,7 @@ def main():
 	db.commit()
 
 	#delete folder
+	pdb.set_trace()
 	call(["rm", "-rf", folder])
 
 
