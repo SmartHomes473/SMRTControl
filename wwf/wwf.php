@@ -128,22 +128,30 @@ If($updateForecast != False)
 // Update WWF if necessary
 if($TxData != '')
 {
-    print $TxData;
-    $Command = 'UPDATE `Communication` SET `Status`=1, `ExStatusLength`='.strlen($TxData).', `ExtendedStatus`="'.$TxData.'" WHERE 1';
-    mysql_query($Command);
+
+    $row = mysql_fetch_array(mysql_query("SELECT `Status` FROM `Communication` WHERE 1"));
+    print 'Status '.($row['Status'] == 0);
+    if($row['Status'] == 0)
+    {
+        $Command = 'UPDATE `Communication` SET `Status`=1, `ExStatusLength`='.strlen($TxData).', `ExtendedStatus`="'.$TxData.'" WHERE 1';
+        mysql_query($Command);
+    }
 }
 // Display website
 print '
- <html style="height:600px">
+ <html style="height:900px">
  <style> 
     ::-webkit-input-placeholder {
         color : black;
+    }
+    input {
+        font-size:x-large;
     }
  </style>
  <head>
  <body>
  <p style="text-align:center"><font size = 7 > Current Weather Forecast</font></p>
- <table cellpadding ="5" style = "width:100%">
+ <table cellpadding ="5" align="center" style = "font-size:x-large">
  <form method="post" enctype="multipart/form-data" id="cityUpdate">
  <tr>
 	<td>Location</td>
@@ -186,9 +194,8 @@ print '
  </tr>
  </form>
  </table>
- <hr>
  <p style="text-align:center"><font size = 7 > Settings </font></p>
- <table>
+ <table cellpadding="5" align="center" style = "font-size:x-large">
  <form method="post" enctype="multipart/form-data" id="settingsUpdate">
  <tr>
  <td>Settings</td>

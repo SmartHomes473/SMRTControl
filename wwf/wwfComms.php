@@ -45,6 +45,7 @@ switch ( $CommData['Status'] )
 	case $TransmitAcknowledge:
 		// TX Acknowledged
 		// Process Acknowledge data. Extract data, Setup next packet or return to IDLE.
+
 		print "Performing TransmitAcknowledge\n";
     	$query = 'UPDATE `Communication` SET `Status`=0 WHERE 1';
    	 	mysql_query($query);
@@ -52,6 +53,10 @@ switch ( $CommData['Status'] )
 	case $TransmitTimeout:
 		// TX timed out
 		// Last transmit timed out. Resend or forget it.
+		$row = mysql_fetch_array(mysql_query("SELECT `TransmitCount` FROM `commsPHP` WHERE 1"));
+
+    	$query = 'UPDATE `Communication` SET `Status`=1 WHERE 1';
+    	$query = 'UPDATE `commsPHP` SET `TransmitCount`=1 WHERE 1';
 		print "Processing Transmit Timeout\n";
 		break;
 	case $ReceievedPacket:

@@ -4,10 +4,12 @@
 	{
 		foreach($devices as $key => $value)
 		{
-			echo '<a href="' . $value . '" target="content_iframe">' . $key . '</a>';
+			echo '<a href="' . $value . '" target="content_iframe" >' . $key . '</a>';
 		}
 	}
 ?>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -18,9 +20,26 @@
 </head>
 
 
-<body align="center">
+<body align="center" style ="font-size:large">
+	<script type="text/javascript">
+	function autoResizeContent(){
+	    var newheight;
+	    var newwidth;
+		document.getElementById("content_iframe").height= (newheight) + "px";
+	    document.getElementById("section").style.height = (newheight) + "px";
+
+	    if(document.getElementById){
+	        newheight=document.getElementById("content_iframe").contentWindow.document.body.scrollHeight;
+	        newwidth=document.getElementById("content_iframe").contentWindow.document.body.scrollWidth;
+	    }
+
+	    document.getElementById("content_iframe").height= (newheight) + "px";
+	    document.getElementById("section").style.height = (newheight) + "px";
+	    document.getElementById("content_iframe").width= (newwidth) + "px";
+	}
+	</script>
 	<div id="header">
-		<h1> <IMG SRC="SMRTHAUSlogoV1.png" WIDTH=60 HEIGHT=60> SMRTControl for SMRTHAUS</h1>
+		<h1> <IMG SRC="SMRTHAUSlogoV1.png" WIDTH=60 HEIGHT=60> <font size ="9" > SMRTControl for SMRTHAUS</font></h1>
 	</div>
 
 	<div id="nav">
@@ -81,7 +100,7 @@
 	</div>
 
 	<div id="section">
-		<iframe src="wwf/wwf.php" scrolling="yes" frameBoarder="no" id="content_iframe" name="content_iframe"></iframe>
+		<iframe src="wwf/wwf.php" scrolling="yes" frameBoarder="no" id="content_iframe" name="content_iframe" onLoad="autoResizeContent();"></iframe>'
 	</div>
 
 	<div id="footer">
