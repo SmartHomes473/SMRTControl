@@ -13,6 +13,8 @@ databases = {
 deviceData = {
 }
 
+device_count = 1
+
 def parseBuff(buff):
 	i = 0
 	#while len(buff) > i:
@@ -22,56 +24,76 @@ def parseBuff(buff):
 	beginD = buff.find(chr(0x0f))
 	endD = buff.find(chr(0x04))
 	while (beginD != -1 and endD != -1) :
-		dev = ord(buff[beginD+1])
 		# Process packet header
+		dev = ord(buff[beginD+1])
 		status = ord(buff[beginD+2])
 		length = ord(buff[beginD+3])<<8 + ord(buff[beginD+4])
-		# Connect to device database 
-		#print dev
-		dbdata = databases[dev]
-		db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
-		cur = db.cursor()
-		# Check current status
-		cur.execute("SELECT * FROM Communication")
-		[dbstatus,dbexlength,dbexdata] = cur.fetchone()
-		if((dbstatus == 2 and status==3) or ( dbstatus ==0 and status == 5)):
 
-			# Good Packet, Update database and call php script
-			cur.execute("UPDATE  `Communication` SET  `Status`="+str(status)+\
-				",`ExStatusLength`="+str(length)+",`ExtendedStatus`=\""+buff[beginD+5:endD]+\
-				"\" WHERE 1")
-			db.commit()
-			#print ['php',deviceData[dev]['Comms']]
-			subprocess.call(['php',deviceData[dev]['Comms']])
-		# prep for next packet.
-		beginD = buff.find(chr(0x0f),endD)
-		endD = buff.find(chr(0x04),beginD)
+		# Check for device registration
+		if dev == 0:
+			# Call add new device with the device URL
+			call(["python", "add_new_device.py", buff[beginD+5:endD]) 
+			with open("devices.txt", "a") as device_file:
+				for line in file:
+					pass
+				update_database(line)
+			# Send Packet with assigned device ID
+			ser.write(chr(0x0f) + chr(device_count-1) + 0) 
+			ser.write(chr(0)+chr(0)) 
+			ser.write(chr(4))
+			print "Sending device registration: " + device_count-1
+		else:
+			# Connect to device database 
+			dbdata = databases[dev]
+			db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
+			cur = db.cursor()
+
+			# Check current status
+			cur.execute("SELECT * FROM Communication")
+			[dbstatus,dbexlength,dbexdata] = cur.fetchone()
+			if((dbstatus == 2 and status==3) or ( dbstatus ==0 and status == 5)):
+				# Good Packet, Update database and call php script
+				cur.execute("UPDATE  `Communication` SET  `Status`="+str(status)+\
+					",`ExStatusLength`="+str(length)+",`ExtendedStatus`=\""+buff[beginD+5:endD]+\
+					"\" WHERE 1")
+				db.commit()
+				subprocess.call(['php',deviceData[dev]['Comms']])
+
+			# prep for next packet.
+			beginD = buff.find(chr(0x0f),endD)
+			endD = buff.find(chr(0x04),beginD)
+
+# Given a devices.txt line, update the database lists accordingly
+def update_database(line):
+	device_line = line.split(',')
+	device_line[4] = device_line[4].replace("\n", "")
+
+	#update database list
+	databases_list = ['localhost', 'root', 'smarthouse']
+	databases_list.append(device_line[4])
+	databases[count] = databases_list
+
+	#update device_data list
+	device_data_item = {'prevCommStatus':0,'sentTime':0,'WatchDog':0} 
+	device_data_item["Comms"] = device_line[0] + "/" + device_line[3]
+	deviceData[count] = device_data_item
+	device_count += 1
+
+# Iterate the devices.txt file, update the database for each line
+def get_devices():
+	# Organization of each line in devices.txt:
+	# folder name, displayed name, homepage, rxpage, database name
+	with open("devices.txt", "r") as device_file:
+		for line in device_file:
+			update_database(line)
+
 
 def main() :
 	readState = 0
 	readbuffer = ''
 	readpacket = ''
 
-	# Organization of each line in devices.txt:
-	#  folder name, displayed name, homepage, rxpage, database name
-	count = 1
-	with open("devices.txt", "r") as device_file:
-		for line in device_file:
-			device_line = line.split(',')
-			device_line[4] = device_line[4].replace("\n", "")
-
-			#update database list
-			databases_list = ['localhost', 'root', 'smarthouse']
-			databases_list.append(device_line[4])
-			databases[count] = databases_list
-
-			#update device_data list
-			device_data_item = {'prevCommStatus':0,'sentTime':0,'WatchDog':0} 
-			device_data_item["Comms"] = device_line[0] + "/" + device_line[3]
-			deviceData[count] = device_data_item
-
-			count += 1
-			
+	get_devices()
 
 	while 1:
 		if ser.inWaiting() != 0:
