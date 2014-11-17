@@ -9,6 +9,7 @@ import pdb
 def main():
 	#should be of form http://WEBSITE/PRODUCT_NAME.tar.gz
 	file_url = sys.argv[1]
+	device_number = sys.argv[2]
 	file_name = file_url[file_url.rfind("/")+1:]
 	folder_name = file_name[:file_name.find(".tar.gz")]
 
@@ -37,7 +38,8 @@ def main():
 		csv += config_info["NAME"] + ","
 		csv += config_info["HOMEPAGE"] + ","
 		csv += config_info["RXPAGE"] + ","
-		csv += config_info["DATABASE"]
+		csv += config_info["DATABASE"] + ","
+		csv += device_number
 		csv += "\n"
 		device_file.write(csv)
 

@@ -59,6 +59,9 @@
 		}
 
 		create_navbar($devices);	
+
+		/* Store the current devices.txt modification time */
+		echo '<script>var currentTS = ', (int)filemtime('devices.txt'), ';</script>';
 	?>
 	</div>
 	
@@ -91,6 +94,25 @@
 					   function() { location.reload(); }
 					  );
 		}
+
+		function check_for_device_updates()
+		{
+			$.ajax({
+					url: 'refresh_for_new_device.php',
+					timeout: 2000, // don't wait too long
+					success: 
+						function(data) {
+							data_parsed = JSON.parse(data);
+							timestamp = data_parsed.ts;
+
+							if (currentTS < timestamp) 
+							{
+								location.reload();
+							}
+						}
+			});
+		}
+		setInterval(check_for_device_updates, 5000)
 	</script>
 
 	<div id="remove">

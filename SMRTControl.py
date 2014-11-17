@@ -33,7 +33,7 @@ def parseBuff(buff):
 		# Check for device registration
 		if dev == 0:
 			# Call add new device with the device URL
-			call(["python", "add_new_device.py", buff[beginD+5:endD]]) 
+			call(["python", "add_new_device.py", buff[beginD+5:endD], str(device_count)]) 
 			with open("devices.txt", "r") as device_file:
 				for line in device_file:
 					pass
@@ -60,35 +60,39 @@ def parseBuff(buff):
 				db.commit()
 				subprocess.call(['php',deviceData[dev]['Comms']])
 
-			# prep for next packet.
-			beginD = buff.find(chr(0x0f),endD)
-			endD = buff.find(chr(0x04),beginD)
+		# prep for next packet.
+		beginD = buff.find(chr(0x0f),endD)
+		endD = buff.find(chr(0x04),beginD)
 
 # Given a devices.txt line, update the database lists accordingly
 def update_database(line):
+	# Organization of each line in devices.txt:
+	# folder name, displayed name, homepage, rxpage, database name, device_ID
 	global device_count 
 	device_line = line.split(',')
-	device_line[4] = device_line[4].replace("\n", "")
+	device_line[5] = device_line[5].replace("\n", "")
 
 	#update database list
 	databases_list = ['localhost', 'root', 'smarthouse']
 	databases_list.append(device_line[4])
-	databases[device_count] = databases_list
+	databases[device_line[5]] = databases_list
 
 	#update device_data list
 	device_data_item = {'prevCommStatus':0,'sentTime':0,'WatchDog':0} 
 	device_data_item["Comms"] = device_line[0] + "/" + device_line[3]
-	deviceData[device_count] = device_data_item
+	deviceData[device_line[5]] = device_data_item
 	device_count += 1
 
 # Iterate the devices.txt file, update the database for each line
 def get_devices():
-	# Organization of each line in devices.txt:
-	# folder name, displayed name, homepage, rxpage, database name
+	# Empty the databases
+	databases.clear()
+	deviceData.clear()
+
+	# Refill with current device list
 	with open("devices.txt", "r") as device_file:
 		for line in device_file:
 			update_database(line)
-
 
 def main() :
 	readState = 0
@@ -96,7 +100,6 @@ def main() :
 	readpacket = ''
 
 	get_devices()
-
 	while 1:
 		if ser.inWaiting() != 0:
 			incoming = ser.read(ser.inWaiting())
@@ -155,51 +158,56 @@ def main() :
 		for key in databases.keys() :
 			dbdata = databases[key]
 			#print dbdata
-			db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
-			cur = db.cursor()
-			cur.execute("SELECT * FROM `Communication` WHERE 1")
-			row = cur.fetchone()
-			# Comms Watchdog: prevents non zero state for more than 5 seconds.
-			if row[0] == 0 and deviceData[key]['prevCommStatus'] != 0:
-				deviceData[key]['Watchdog'] = 0
-				deviceData[key]['prevCommStatus'] = 0
-			elif row[0] != 0: 
-				if deviceData[key]['prevCommStatus'] != row[0]:
-					deviceData[key]['Watchdog'] = time.time()
-					deviceData[key]['prevCommStatus'] = row[0]
-				else:
-					curtime = time.time()
-					if (curtime - deviceData[key]['Watchdog']) > 5 :
-						cur.execute("UPDATE  `Communication` SET  `Status` =0 WHERE 1")
-						db.commit()
-					
-			# Check for Send Packet or Send Reply
-			if row[0] == 1 or row[0] == 6:
-				# Prep send status
-				if(row[0] == 1) :
-					status = chr(2)
-				else:
-					status = chr(6)
+			try:
+				#attempt to connect to database
+				db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
+				cur = db.cursor()
+				cur.execute("SELECT * FROM `Communication` WHERE 1")
+				row = cur.fetchone()
+				# Comms Watchdog: prevents non zero state for more than 5 seconds.
+				if row[0] == 0 and deviceData[key]['prevCommStatus'] != 0:
+					deviceData[key]['Watchdog'] = 0
+					deviceData[key]['prevCommStatus'] = 0
+				elif row[0] != 0: 
+					if deviceData[key]['prevCommStatus'] != row[0]:
+						deviceData[key]['Watchdog'] = time.time()
+						deviceData[key]['prevCommStatus'] = row[0]
+					else:
+						curtime = time.time()
+						if (curtime - deviceData[key]['Watchdog']) > 5 :
+							cur.execute("UPDATE  `Communication` SET  `Status` =0 WHERE 1")
+							db.commit()
+						
+				# Check for Send Packet or Send Reply
+				if row[0] == 1 or row[0] == 6:
+					# Prep send status
+					if(row[0] == 1) :
+						status = chr(2)
+					else:
+						status = chr(6)
 
-				# Send Packet
-				ser.write(chr(0x0f) +chr(key)+ status) #Writes Status
-				ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff)) #Writes ExStatusLeng
-				ser.write(str(row[2])) #Writes ExtendedStatus
-				ser.write(chr(4))
-				print "Sending: "+str(row[0])+" "+str(row[2])
+					# Send Packet
+					ser.write(chr(0x0f) +chr(key)+ status) #Writes Status
+					ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff)) #Writes ExStatusLeng
+					ser.write(str(row[2])) #Writes ExtendedStatus
+					ser.write(chr(4))
+					print "Sending: "+str(row[0])+" "+str(row[2])
 
-				# Update sent time and next status
-				deviceData[key]['sentTime'] = time.time()
-				nstatus = str(2*(row[0] == 1))
-				cur.execute("UPDATE  `Communication` SET  `Status` ="+nstatus+" WHERE 1")
-				db.commit()
-			# Check for packet delay
-			elif row[0] == 2:
-				curTime = time.time()
-				if curTime - deviceData[key]['sentTime'] > 1 :
-					print "Timeout of Device: "+str(key)+' At:'+str(curTime)+' Sent:'+str(deviceData[key]['sentTime'])
-					cur.execute("UPDATE `Communication` SET `Status` = '4' WHERE `Communication`.`Status` =2 LIMIT 1")
-					db.commit() 
+					# Update sent time and next status
+					deviceData[key]['sentTime'] = time.time()
+					nstatus = str(2*(row[0] == 1))
+					cur.execute("UPDATE  `Communication` SET  `Status` ="+nstatus+" WHERE 1")
+					db.commit()
+				# Check for packet delay
+				elif row[0] == 2:
+					curTime = time.time()
+					if curTime - deviceData[key]['sentTime'] > 1 :
+						print "Timeout of Device: "+str(key)+' At:'+str(curTime)+' Sent:'+str(deviceData[key]['sentTime'])
+						cur.execute("UPDATE `Communication` SET `Status` = '4' WHERE `Communication`.`Status` =2 LIMIT 1")
+						db.commit() 
+			except mdb.Error as err:
+				# A device has been deleted, rebuild the python databases
+				get_devices()
 
 	ser.close()
 	return
