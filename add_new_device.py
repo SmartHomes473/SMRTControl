@@ -1,5 +1,7 @@
-from subprocess import call
 import MySQLdb as mdb
+import subprocess
+from subprocess import call
+import os
 import sys
 import pdb
 
@@ -10,9 +12,12 @@ def main():
 	file_name = file_url[file_url.rfind("/")+1:]
 	folder_name = file_name[:file_name.find(".tar.gz")]
 
+	FNULL = open(os.devnull, 'w')
+
 	#Put the files into the PRODUCT_NAME folder
 	call(["mkdir", folder_name])
-	call(["wget", file_url])
+	call(["chmod", "777", folder_name])
+	call(["wget", file_url], stdout=FNULL, stderr=subprocess.STDOUT)
 	call(["tar", "-C", folder_name, "-zxf", file_name])
 	call(["rm", file_name])
 

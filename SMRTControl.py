@@ -4,6 +4,7 @@ import sys
 import pdb
 import time
 import subprocess
+from subprocess import call
 
 
 ser = serial.Serial('/dev/ttyAMA0',9600)
@@ -32,16 +33,16 @@ def parseBuff(buff):
 		# Check for device registration
 		if dev == 0:
 			# Call add new device with the device URL
-			call(["python", "add_new_device.py", buff[beginD+5:endD]) 
-			with open("devices.txt", "a") as device_file:
-				for line in file:
+			call(["python", "add_new_device.py", buff[beginD+5:endD]]) 
+			with open("devices.txt", "r") as device_file:
+				for line in device_file:
 					pass
 				update_database(line)
 			# Send Packet with assigned device ID
-			ser.write(chr(0x0f) + chr(device_count-1) + 0) 
+			ser.write(chr(0x0f) + chr(device_count-1) + chr(0)) 
 			ser.write(chr(0)+chr(0)) 
 			ser.write(chr(4))
-			print "Sending device registration: " + device_count-1
+			print "Sending device registration: " + str(device_count-1)
 		else:
 			# Connect to device database 
 			dbdata = databases[dev]
@@ -65,18 +66,19 @@ def parseBuff(buff):
 
 # Given a devices.txt line, update the database lists accordingly
 def update_database(line):
+	global device_count 
 	device_line = line.split(',')
 	device_line[4] = device_line[4].replace("\n", "")
 
 	#update database list
 	databases_list = ['localhost', 'root', 'smarthouse']
 	databases_list.append(device_line[4])
-	databases[count] = databases_list
+	databases[device_count] = databases_list
 
 	#update device_data list
 	device_data_item = {'prevCommStatus':0,'sentTime':0,'WatchDog':0} 
 	device_data_item["Comms"] = device_line[0] + "/" + device_line[3]
-	deviceData[count] = device_data_item
+	deviceData[device_count] = device_data_item
 	device_count += 1
 
 # Iterate the devices.txt file, update the database for each line

@@ -22,7 +22,7 @@ def main():
 				with open("devices_new.txt", "w") as newdevice_file:
 					newdevice_file.write(line)
 
-	call(["chmod", "666", "devices_new.txt"])
+	call(["chmod", "777", "devices_new.txt"])
 	call(["mv", "devices_new.txt", "devices.txt"])	
 
 	#drop database
@@ -33,7 +33,6 @@ def main():
 	db.commit()
 
 	#delete folder
-	pdb.set_trace()
 	call(["rm", "-rf", folder])
 
 
