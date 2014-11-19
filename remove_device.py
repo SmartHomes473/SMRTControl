@@ -25,10 +25,10 @@ def main():
 	call(["chmod", "777", "devices_new.txt"])
 	call(["mv", "devices_new.txt", "devices.txt"])	
 
-	#drop database
+	#tell smrtcontrol to drop database
 	db = mdb.connect("localhost", "root", "smarthouse", database)
 	cursor = db.cursor()
-	sql = "DROP DATABASE `XXX`;".replace("XXX", database)
+	sql = "UPDATE `Communication` SET `Status`= 1, `ExStatusLength`= 0, `ExtendedStatus`= 0"
 	cursor.execute(sql)
 	db.commit()
 

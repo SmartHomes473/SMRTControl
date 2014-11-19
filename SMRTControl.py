@@ -157,29 +157,38 @@ def main() :
 			readpacket = ''
 		for key in databases.keys() :
 			dbdata = databases[key]
-			#print dbdata
-			try:
-				#attempt to connect to database
-				db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
-				cur = db.cursor()
-				cur.execute("SELECT * FROM `Communication` WHERE 1")
-				row = cur.fetchone()
-				# Comms Watchdog: prevents non zero state for more than 5 seconds.
-				if row[0] == 0 and deviceData[key]['prevCommStatus'] != 0:
-					deviceData[key]['Watchdog'] = 0
-					deviceData[key]['prevCommStatus'] = 0
-				elif row[0] != 0: 
-					if deviceData[key]['prevCommStatus'] != row[0]:
-						deviceData[key]['Watchdog'] = time.time()
-						deviceData[key]['prevCommStatus'] = row[0]
-					else:
-						curtime = time.time()
-						if (curtime - deviceData[key]['Watchdog']) > 5 :
-							cur.execute("UPDATE  `Communication` SET  `Status` =0 WHERE 1")
-							db.commit()
-						
-				# Check for Send Packet or Send Reply
-				if row[0] == 1 or row[0] == 6:
+			db = mdb.connect(dbdata[0],dbdata[1],dbdata[2],dbdata[3])
+			cur = db.cursor()
+			cur.execute("SELECT * FROM `Communication` WHERE 1")
+			row = cur.fetchone()
+			# Comms Watchdog: prevents non zero state for more than 5 seconds.
+			if row[0] == 0 and deviceData[key]['prevCommStatus'] != 0:
+				deviceData[key]['Watchdog'] = 0
+				deviceData[key]['prevCommStatus'] = 0
+			elif row[0] != 0: 
+				if deviceData[key]['prevCommStatus'] != row[0]:
+					deviceData[key]['Watchdog'] = time.time()
+					deviceData[key]['prevCommStatus'] = row[0]
+				else:
+					curtime = time.time()
+					if (curtime - deviceData[key]['Watchdog']) > 5 :
+						cur.execute("UPDATE  `Communication` SET  `Status` =0 WHERE 1")
+						db.commit()
+					
+			# Check for Send Packet or Send Reply
+			if row[0] == 1 or row[0] == 6:
+				# Check if request to delete database
+				if row[1] == 0 and row[2] == "0":
+					ser.write(chr(0x0f) + chr(0) + chr(1)) 
+					ser.write(chr(0)+chr(0)) 
+					ser.write(chr(4))
+					print "Deleting device: " + dbdata[3]
+					cur.execute("DROP DATABASE `XXX`".replace("XXX", dbdata[3]))
+					db.commit()
+					get_devices()
+				else:
+					# Is a request to send a packet
+
 					# Prep send status
 					if(row[0] == 1) :
 						status = chr(2)
@@ -187,7 +196,7 @@ def main() :
 						status = chr(6)
 
 					# Send Packet
-					ser.write(chr(0x0f) +chr(key)+ status) #Writes Status
+					ser.write(chr(0x0f) +key+ status) #Writes Status
 					ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff)) #Writes ExStatusLeng
 					ser.write(str(row[2])) #Writes ExtendedStatus
 					ser.write(chr(4))
@@ -198,16 +207,13 @@ def main() :
 					nstatus = str(2*(row[0] == 1))
 					cur.execute("UPDATE  `Communication` SET  `Status` ="+nstatus+" WHERE 1")
 					db.commit()
-				# Check for packet delay
-				elif row[0] == 2:
-					curTime = time.time()
-					if curTime - deviceData[key]['sentTime'] > 1 :
-						print "Timeout of Device: "+str(key)+' At:'+str(curTime)+' Sent:'+str(deviceData[key]['sentTime'])
-						cur.execute("UPDATE `Communication` SET `Status` = '4' WHERE `Communication`.`Status` =2 LIMIT 1")
-						db.commit() 
-			except mdb.Error as err:
-				# A device has been deleted, rebuild the python databases
-				get_devices()
+			# Check for packet delay
+			elif row[0] == 2:
+				curTime = time.time()
+				if curTime - deviceData[key]['sentTime'] > 1 :
+					print "Timeout of Device: "+str(key)+' At:'+str(curTime)+' Sent:'+str(deviceData[key]['sentTime'])
+					cur.execute("UPDATE `Communication` SET `Status` = '4' WHERE `Communication`.`Status` =2 LIMIT 1")
+					db.commit() 
 
 	ser.close()
 	return
