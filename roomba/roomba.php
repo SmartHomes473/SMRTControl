@@ -19,17 +19,17 @@
 
 
 	<div id="buttons">
-		<a href="#0" onclick="button_clicked('default');" class="button clean"></a>
-		<a href="#0" onclick="button_clicked('spot');" class="button spot"></a>
-		<a href="#0" onclick="button_clicked('max');" class="button max"></a>
-		<a href="#0" onclick="button_clicked('dock');" class="button dock"></a>
+		<a href="javascript:;" onclick="button_clicked('default');" class="button clean"></a>
+		<a href="javascript:;" onclick="button_clicked('spot');" class="button spot"></a>
+		<a href="javascript:;" onclick="button_clicked('max');" class="button max"></a>
+		<a href="javascript:;" onclick="button_clicked('dock');" class="button dock"></a>
 	</div>
     
 	<br>
 	<div id="music">
-		<a href="#0" onclick="button_clicked('song1');"><img src="music.PNG" /></a>
-		<a href="#0" onclick="button_clicked('song2');"><img src="music.PNG" /></a>
-		<a href="#0" onclick="button_clicked('song3');"><img src="music.PNG" /></a>
+		<a href="javascript:;" onclick="button_clicked('song1');"><img src="music.PNG" /></a>
+		<a href="javascript:;" onclick="button_clicked('song2');"><img src="music.PNG" /></a>
+		<a href="javascript:;" onclick="button_clicked('song3');"><img src="music.PNG" /></a>
 	</div>
 
 </body>
