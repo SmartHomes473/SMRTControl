@@ -30,6 +30,7 @@
 		<a href="javascript:;" onclick="button_clicked('song1');"><img src="music.PNG" /></a>
 		<a href="javascript:;" onclick="button_clicked('song2');"><img src="music.PNG" /></a>
 		<a href="javascript:;" onclick="button_clicked('song3');"><img src="music.PNG" /></a>
+		<a href="javascript:;" onclick="button_clicked('song4');"><img src="music.PNG" /></a>
 	</div>
 
 </body>

@@ -23,7 +23,8 @@
             "max"		=> array(0x02, 0x02),
             "song1"      => array(0x06, 0x01), 
             "song2"      => array(0x06, 0x02), 
-            "song3"      => array(0x06, 0x03) 
+            "song3"      => array(0x06, 0x03), 
+            "song3"      => array(0x06, 0x04) 
 		];
 
 	$packet = array();
