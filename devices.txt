@@ -1,2 +1,3 @@
 wwf,Wall Weather Forecaster,wwf.php,wwfComms.php,wwfSample,1
-roomba,Roomba,roomba.php,roombaComms.php,roomba,6
+roomba,Roomba,roomba.php,roombaComms.php,roomba,2
+roomba,Roomba,roomba.php,roombaComms.php,roomba,3
