@@ -20,7 +20,6 @@ def main():
 	call(["chmod", "777", folder_name])
 	call(["wget", file_url], stdout=FNULL, stderr=subprocess.STDOUT)
 	call(["tar", "-C", folder_name, "-zxf", file_name])
-	call(["rm", file_name])
 
 	#read config data
 	config_info = dict()

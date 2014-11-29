@@ -24,7 +24,7 @@
             "song1"      => array(0x06, 0x01), 
             "song2"      => array(0x06, 0x02), 
             "song3"      => array(0x06, 0x03), 
-            "song3"      => array(0x06, 0x04) 
+            "song4"      => array(0x06, 0x00) 
 		];
 
 	$packet = array();

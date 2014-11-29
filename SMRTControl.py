@@ -9,12 +9,12 @@ from subprocess import call
 
 ser = serial.Serial('/dev/ttyAMA0',9600)
 databases = { 
-};
+}
 
 deviceData = {
 }
 
-device_count = 1
+device_count = 0
 
 def parseBuff(buff):
 	i = 0
@@ -24,12 +24,16 @@ def parseBuff(buff):
 	#print "END"
 	beginD = buff.find(chr(0x0f))
 	endD = buff.find(chr(0x04))
+        # make sure END D is not apart of the header
+	while endD != -1 and endD - beginD < 5 :
+		endD = buff.find(chr(0x04),endD+1)
+
 	while (beginD != -1 and endD != -1) :
 		# Process packet header
 		dev = ord(buff[beginD+1])
 		status = ord(buff[beginD+2])
 		length = ord(buff[beginD+3])<<8 + ord(buff[beginD+4])
-
+		print dev,status,length
 		# Check for device registration
 		if dev == 0:
 			# Call add new device with the device URL
@@ -63,24 +67,27 @@ def parseBuff(buff):
 		# prep for next packet.
 		beginD = buff.find(chr(0x0f),endD)
 		endD = buff.find(chr(0x04),beginD)
+		while (endD != -1 and endD -beginD < 5):
+			endD = buff.find(ch(0x04),endD+1)
 
 # Given a devices.txt line, update the database lists accordingly
 def update_database(line):
 	# Organization of each line in devices.txt:
 	# folder name, displayed name, homepage, rxpage, database name, device_ID
 	global device_count 
+	global databases
 	device_line = line.split(',')
 	device_line[5] = device_line[5].replace("\n", "")
 
 	#update database list
 	databases_list = ['localhost', 'root', 'smarthouse']
 	databases_list.append(device_line[4])
-	databases[device_line[5]] = databases_list
+	databases[int(device_line[5])] = databases_list
 
 	#update device_data list
 	device_data_item = {'prevCommStatus':0,'sentTime':0,'WatchDog':0} 
 	device_data_item["Comms"] = device_line[0] + "/" + device_line[3]
-	deviceData[device_line[5]] = device_data_item
+	deviceData[int(device_line[5])] = device_data_item
 	device_count += 1
 
 # Iterate the devices.txt file, update the database for each line
@@ -92,6 +99,7 @@ def get_devices():
 	# Refill with current device list
 	with open("devices.txt", "r") as device_file:
 		for line in device_file:
+			print line
 			update_database(line)
 
 def main() :
@@ -125,7 +133,7 @@ def main() :
 						#	i +=1
 						#print "END"
 						#Checking to see if start delimiter received after last end delimiter
-						k = incoming[l:].find(chr(0x0f))
+						k = incoming.find(chr(0x0f),l)
 						#Found Start Delimiter After last end delimiter
 						if k != -1:
 							readbuffer = incoming[k:]
@@ -143,7 +151,7 @@ def main() :
 					readpacket = readbuffer + incoming[:(j+1)]
 					readState = 0
 					#Searching for start delimiter after last received end delimiter
-					k = incoming[j:].find(chr(0x0f))
+					k = incoming.find(chr(0x0f),j)
 					#Found start delimiter after end delimiter
 					if k != -1:
 						readbuffer = incoming[k:]
@@ -196,7 +204,7 @@ def main() :
 						status = chr(6)
 
 					# Send Packet
-					ser.write(chr(0x0f) +key+ status) #Writes Status
+					ser.write(chr(0x0f) +chr(key)+ status) #Writes Status
 					ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff)) #Writes ExStatusLeng
 					ser.write(str(row[2])) #Writes ExtendedStatus
 					ser.write(chr(4))
