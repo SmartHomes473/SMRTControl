@@ -1,0 +1,5 @@
+NAME: Temperature Controller
+HOMEPAGE: temperature.php
+RXPAGE: temperatureComms.php
+SQL: temperature_control.sql
+DATABASE: temperature 
