@@ -28,13 +28,14 @@ function GetCityWeather($cities){
 	$TxData = '';
 	foreach($cities as $id)
 	{
-    	$row = mysql_fetch_array(mysql_query("SELECT `id`, `Location`, `HighTemp`, `LowTemp`, `Humidity`, `PrecipChance` FROM `Weather` WHERE id=" . $id));
+    	$row = mysql_fetch_array(mysql_query("SELECT `id`, `Location`, `condition`,`HighTemp`, `LowTemp`, `Humidity`, `PrecipChance` FROM `Weather` WHERE id=" . $id));
     	$location = $row['Location'];
+        $cond = $row['condition'];
         $high = $row['HighTemp'];
         $low = $row['LowTemp'];
         $humidity = $row['Humidity'];
         $pop = $row['PrecipChance'];
-		$TxData .='w;'.$id.';'.$location.';'.$high.';'.$low.';'.$humidity.';'.$pop.'#';
+		$TxData .='w;'.$id.';'.$location.';'.$cond.';'.$high.';'.$low.';'.$humidity.';'.$pop.'#';
 	}
 	return $TxData;
 }
@@ -65,6 +66,9 @@ switch ( $CommData['Status'] )
 		print "Processing Receieved Packet\n";
 		$Data = $CommData['ExtendedStatus'];
 		$TxData = '';
+        // Add timestamp
+        date_default_timezone_set('America/Detroit');
+        $TxData .= 't;'.date('g;i;A').'#';
 		$index = 0;
 		while($index < strlen($Data))
 		{

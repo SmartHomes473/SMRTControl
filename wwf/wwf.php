@@ -7,6 +7,8 @@ $SQLPassword = "smarthouse";
 $SQLHost = "localhost";
 $WWFDB   = "wwfSample"; 
 
+$TxData = '';
+
 // html for image usage
 $images = array(
      0 => '',
@@ -21,9 +23,9 @@ mysql_select_db($WWFDB,$database);
 // Check for settings changes
 if(isset($_POST['updateSettings']))
 {
-    
+  mysql_query("UPDATE `Settings` SET `updateDelay`=".$_POST['delay'].",`degreeMode`=".$_POST['degree']." WHERE id=1");
+  $TxData .= 's;'.$_POST['delay'].';'.$_POST['degree'].'#';
 }
-
 
 // Setup variables from database settings
 $settings = mysql_fetch_array(mysql_query("SELECT * FROM `Settings` WHERE id=1"));
@@ -97,7 +99,6 @@ if(!isset($Cities) || !isset($WoeIDs))
         $row =mysql_fetch_array($q1);
     }
 }
-$TxData = '';
 If($updateForecast != False)
 { // Update each city's forcast
     foreach($WoeIDs as $id => $woeid)
@@ -120,7 +121,7 @@ If($updateForecast != False)
                 $humidity = $fcast->avehumidity;
                 $pop = $fcast->pop;
                 mysql_query('UPDATE `Weather` SET `condition`="'.$text.'",`HighTemp`='.$high.',`LowTemp`='.$low.',`Humidity`='.$humidity.',`PrecipChance`='.$pop.' WHERE id='.$id);
-                $TxData .= $id.';'.$Cities[$id].';'.$high.';'.$low.';'.$humidity.';'.$pop.'#';
+                $TxData .= $id.';'.$Cities[$id].';'.$text.';'.$high.';'.$low.';'.$humidity.';'.$pop.'#';
             }
         }
     }
@@ -145,21 +146,21 @@ print '
         color : black;
     }
     input {
-        font-size:x-large;
+        font-size:large;
     }
  </style>
  <head>
  <body>
- <p style="text-align:center"><font size = 7 > Current Weather Forecast</font></p>
- <table cellpadding ="5" align="center" style = "font-size:x-large">
+ <p style="text-align:center"><font size = 7 >Weather Forecast</font></p>
+ <table cellpadding ="5" align="center" style = "font-size:large">
  <form method="post" enctype="multipart/form-data" id="cityUpdate">
  <tr>
 	<td>Location</td>
-        <td>Condidtion</td>
-	<td>High</td>
-	<td>Low</td>	
-	<td>Humidity</td>
-	<td>Percipitation</td>
+    <td style="text-align:center">Condidtion</td>
+	<td style="text-align:center">  High </td>
+	<td style="text-align:center">  Low  </td>	
+	<td style="text-align:center">Humidity</td>
+	<td style="text-align:center">Chance of Precip</td>
 
  </tr>
 ';
@@ -181,10 +182,10 @@ for($i = 1; $i <=5;$i++)
 
 	print '</td>
            <td>' . $CurCity['condition'].'</td>
-	       <td>' . $CurCity['HighTemp'] . '&deg;F</td>
-	       <td>' . $CurCity['LowTemp'] . '&deg;F</td>
-	       <td>' . $CurCity['Humidity'].'%</td>
-	       <td>' . $CurCity['PrecipChance'].'%</td>
+	       <td style="text-align:center">' . $CurCity['HighTemp'] . '&deg;F</td>
+	       <td style="text-align:center">' . $CurCity['LowTemp'] . '&deg;F</td>
+	       <td style="text-align:center">' . $CurCity['Humidity'].'%</td>
+	       <td style="text-align:center">' . $CurCity['PrecipChance'].'%</td>
 	       </tr>';
                
 }
@@ -194,40 +195,43 @@ print '
  </tr>
  </form>
  </table>
+ <script type="text/javascript">
+ function showDelay(newValue)
+ {
+   document.getElementById("textDelay").innerHTML=newValue;
+ } 
+ </script>
  <p style="text-align:center"><font size = 7 > Settings </font></p>
- <table cellpadding="5" align="center" style = "font-size:x-large">
+ <table cellpadding="5" align="center" style = "font-size:large">
  <form method="post" enctype="multipart/form-data" id="settingsUpdate">
  <tr>
- <td>Settings</td>
- <td>Value</td>
+ <td>Setting</td>
+ <td style="text-align:center">Value</td>
  </tr>
 ';
 //print gettype($settings);
-foreach( $settings as $key => $value)
-{
-    if('string' ==gettype($key))
-    print '
- <tr>
- <td>'.$key.' </td>
- <td><input type="text" name="'.$key.'" placeholder="'.$value.'"></td>
- </tr>
-';
-    switch($key)
-    {
-    case 'updateDelay':
-        // Add slider 
-        break;
-    case 'degreeMode':
-        // Add toggle switch
-        break;
-    }
-}
-print '
- <tr><td><input type="submit" name="updateSettings" value="Update Settings"></td></tr>
- </table>
- <script>
-
- </script>
- </body>
- </html>';
+print'
+<tr>
+<td>Update Delay</td>
+<td style="text-align:center"> <span id=textDelay>'.($settings['updateDelay']).'</span> Hour(s) </td></tr><tr><td></td><td> <input type="range" name="delay" min="1" max="24" step="1" value="'.($settings['updateDelay']).'" onchange="showDelay(this.value)"></td>
+</tr>
+<tr>
+<td>Temperature Scale</td>
+<td><input type="radio" name="degree" value="0"';
+if($settings['degreeMode'] == 0)
+    print 'checked="checked"';
+print '>Farienheit</td>
+</tr>
+<tr><td></td><td><input type="radio" name="degree" value="1"';
+if($settings['degreeMode'] == 1)
+    print 'checked="checked"';
+print '>Celcius</td>
+<tr><td></td><td><input type="radio" name="degree" value="2"';
+if($settings['degreeMode'] == 2)
+    print 'checked="checked"';
+print '>Kelvin</td>
+<tr><td><input type="submit" name="updateSettings" value="Update Settings"></td></tr>
+</table>
+</body>
+</html>';
 ?>
