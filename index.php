@@ -2,6 +2,8 @@
 	/* Function takes a dictionary of Device name => device php page */
 	function create_navbar($devices)
 	{
+		/* Hacky way to ensure "Home" is the first option in the navbar */
+		echo '<a href="home/home.php" target="content_iframe">Home</a>';
 		foreach($devices as $key => $value)
 		{
 			echo '<a href="' . $value . '" target="content_iframe" >' . $key . '</a>';
