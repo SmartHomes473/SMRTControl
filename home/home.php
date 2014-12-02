@@ -3,13 +3,20 @@
 <head>
 	<title>Welcome to SMARTHAUS!</title>
 </head>
-
 <body>
 	<h1> Welcome to SMRTHAUS! </h1>
 
 	<!-- Blurb for the demo -->
-	<p> SMRTHAUS is a platform that allows for a highly customizable
-		home automation experience. As long as a "smart" device abides
+	<p> SMRTHAUS is a home automation platform that allows for a customizable
+        home automation experience. Featuring:
+        <ul>
+            <li>Web control interface</li>
+            <li>Open source design</li>
+            <li>Minimally intrusive device networking</li>
+            <li>Easy device integration</li>
+        </ul>
+        
+        As long as a "smart" device abides
 		by our platform's requirements, it can be added to your 
 		ever-expanding list of devices in minutes - and can be controlled
 		right from this web page. Take a look at our suite of demo devices

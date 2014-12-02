@@ -140,7 +140,7 @@ if($TxData != '')
 }
 // Display website
 print '
- <html style="height:900px">
+ <html>
  <style> 
     ::-webkit-input-placeholder {
         color : black;
@@ -225,7 +225,7 @@ print '>Farienheit</td>
 <tr><td></td><td><input type="radio" name="degree" value="1"';
 if($settings['degreeMode'] == 1)
     print 'checked="checked"';
-print '>Celcius</td>
+print '>Celsius</td>
 <tr><td></td><td><input type="radio" name="degree" value="2"';
 if($settings['degreeMode'] == 2)
     print 'checked="checked"';

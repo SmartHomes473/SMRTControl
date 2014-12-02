@@ -125,7 +125,7 @@
 	</div>
 
 	<div id="section">
-		<iframe src="wwf/wwf.php" scrolling="yes" frameBoarder="no" id="content_iframe" name="content_iframe" onLoad="autoResizeContent();"></iframe>'
+		<iframe src="home/home.php" scrolling="yes" frameBoarder="no" id="content_iframe" name="content_iframe" onLoad="autoResizeContent();"></iframe>'
 	</div>
 
 	<div id="footer">
