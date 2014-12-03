@@ -7,7 +7,7 @@
 </head>
 
 <body>
-	<h1> ROOMBA CONTROL</h1>
+	<p style="text-align:center"><font size = 7 >Roomba Control</font></p>
 
 	<script type="text/javascript">
 		function button_clicked(button)
