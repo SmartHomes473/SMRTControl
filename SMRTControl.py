@@ -207,12 +207,13 @@ def main() :
 					ser.write(chr(0x0f) +chr(key)+ status) #Writes Status
 					ser.write(chr((row[1]>>8)&0xff)+chr(row[1]&0xff)) #Writes ExStatusLeng
 					ser.write(str(row[2])) #Writes ExtendedStatus
-					ser.write(chr(4))
+					ser.write(chr(0x04))
 					print "Sending: "+str(row[0])+" "+str(row[2])
 
 					# Update sent time and next status
 					deviceData[key]['sentTime'] = time.time()
 					nstatus = str(2*(row[0] == 1))
+					print "Status "+nstatus
 					cur.execute("UPDATE  `Communication` SET  `Status` ="+nstatus+" WHERE 1")
 					db.commit()
 			# Check for packet delay

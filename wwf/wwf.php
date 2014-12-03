@@ -24,7 +24,7 @@ mysql_select_db($WWFDB,$database);
 if(isset($_POST['updateSettings']))
 {
   mysql_query("UPDATE `Settings` SET `updateDelay`=".$_POST['delay'].",`degreeMode`=".$_POST['degree']." WHERE id=1");
-  $TxData .= 's;'.$_POST['delay'].';'.$_POST['degree'].'#';
+  $TxData .= ';s;'.$_POST['delay'].';'.$_POST['degree'].'#';
 }
 
 // Setup variables from database settings
@@ -131,7 +131,7 @@ if($TxData != '')
 {
 
     $row = mysql_fetch_array(mysql_query("SELECT `Status` FROM `Communication` WHERE 1"));
-    print 'Status '.($row['Status'] == 0);
+    print 'Status '.($row['Status']);
     if($row['Status'] == 0)
     {
         $Command = 'UPDATE `Communication` SET `Status`=1, `ExStatusLength`='.strlen($TxData).', `ExtendedStatus`="'.$TxData.'" WHERE 1';

@@ -1,3 +1,4 @@
 wwf,Wall Weather Forecaster,wwf.php,wwfComms.php,wwfSample,1
+outlets,SMRTOutlets,outlets.php,outletsComms.php,outlets,3
+temperature_control,Temperature Controller,temperature.php,temperatureComms.php,temperature,4
 roomba,Roomba,roomba.php,roombaComms.php,roomba,2
-roomba,Roomba,roomba.php,roombaComms.php,roomba,3
