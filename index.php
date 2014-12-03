@@ -41,7 +41,7 @@
 	}
 	</script>
 	<div id="header">
-		<h1> <IMG SRC="SMRTHAUSlogoV1.png" WIDTH=60 HEIGHT=60> <font size ="9" > SMRTControl for SMRTHAUS</font></h1>
+		<h1> <IMG SRC="SMRTHAUSlogoV1small.png" WIDTH=60 HEIGHT=60> <font size ="9" > SMRTControl for SMRTHAUS</font></h1>
 	</div>
 
 	<div id="nav">
