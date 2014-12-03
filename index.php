@@ -118,20 +118,17 @@
 		setInterval(check_for_device_updates, 5000)
 	</script>
 
-	<div id="remove">
-		<a href="javascript:;" onclick="remove_device();">
-			<img src="remove.png">
-		</a>
-	</div>
 
 	<div id="section">
 		<iframe src="home/home.php" scrolling="yes" frameBoarder="no" id="content_iframe" name="content_iframe" onLoad="autoResizeContent();"></iframe>'
 	</div>
 
 	<div id="footer">
-		<a href="javascript:;" onclick="add_device();">
-			Add new device
-		</a>
+		<div id="remove">
+			<a href="javascript:;" onclick="remove_device();">
+				<img src="remove.png" WIDTH=30 HEIGHT=30>
+			</a>
+		</div>
 	</div>
 
 	<div id="postFooter">
