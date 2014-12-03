@@ -1,0 +1,63 @@
+
+.outlet-container {
+	width: 450px;
+	margin-left: auto;
+	margin-right: auto;
+	font-size: 2em;
+}
+
+.outlet-row {
+	margin: 10px 0px;
+}
+
+
+.outlet-name {
+	display: inline-block;
+	padding: 10px;
+	width: 300px;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	vertical-align:top;
+}
+
+.outlet-state-off {
+	background-color: #C24641;
+}
+
+.outlet-state-on {
+	background-color: #4CC552;
+}
+
+.outlet-button {
+	display: inline-block;
+	padding: 5px 10px;
+	margin-top: 5px;
+	width: 60px;
+	cursor: pointer;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	border-radius: 10px;
+	text-align:center;
+	margin-right: 20px;
+
+	box-shadow: 1px 1px 3px;
+}
+
+.outlet-update-name {
+	display: inline-block;
+	font-size: 1em;
+	font-family: serif;
+	width: 300px;
+	border: 0px;
+	margin: 0px;
+	padding: 10px;
+
+	border-radius: 10px;
+
+	box-shadow: inset 0px 0px 5px #484848;
+}

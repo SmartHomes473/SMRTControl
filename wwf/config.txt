@@ -1,0 +1,5 @@
+NAME: Wall Weather Forecaster
+HOMEPAGE: wwf.php
+RXPAGE: wwfComms.php
+SQL: wwf.sql
+DATABASE: wwfSample

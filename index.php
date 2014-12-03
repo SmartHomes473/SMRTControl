@@ -72,21 +72,30 @@
 		{
 			var url = document.getElementById("content_iframe").contentWindow.location.href;
 			url = url.slice(url.lastIndexOf("/")+1, url.length);
-			alert(url);
 
 			remove = confirm("Are you sure you wish to remove this device?");
 
 			if (remove == true)
 			{
-				$.post("remove_device.php", 
-					   { "device" : url },
-					   function() { location.reload(); }
-					  );
+				$.ajax({
+					url: 'remove_device.php',
+					type: 'POST',
+					data: {
+					'device': url
+					},
+				       success:function(result)//we got the response
+				       {
+				       },
+				       error:function(jqXHR, exception){alert('Exeption:'+exception); alert('Error '+jqXHR.status);}
+
+
+				    })
 			}
 			else
 			{
 				/* Do nothing */
 			}
+			return false;
 		}
 
 		function add_device()

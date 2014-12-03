@@ -5,7 +5,10 @@ import pdb
 
 def main():
 
+	log = open("py_remove_log.txt", "w")
+
 	device_to_remove = sys.argv[1]	
+	log.write(device_to_remove)
 
 	#find device line, get folder/database name and remove the line
 	folder = None
@@ -19,7 +22,7 @@ def main():
 				folder = device_line[0]
 				database = device_line[4].replace("\n", "")
 			else:
-				with open("devices_new.txt", "w") as newdevice_file:
+				with open("devices_new.txt", "a") as newdevice_file:
 					newdevice_file.write(line)
 
 	call(["chmod", "777", "devices_new.txt"])

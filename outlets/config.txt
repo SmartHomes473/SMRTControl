@@ -1,0 +1,5 @@
+NAME: Outlets
+HOMEPAGE: outlets.php
+RXPAGE: outletsComms.php
+SQL: outlets.sql
+DATABASE: outlets
