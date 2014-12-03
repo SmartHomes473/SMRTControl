@@ -46,15 +46,29 @@
 		$unit = $_POST['unit'];
 		write_setpoint($temperature, $unit);
 
+		$temp_arr = array($temperature);
+
 		if ($unit == "Farenheit")
 		{
-			$temperature = ($temperature * (9/5)) + 32;
+			array_push($temp_arr, 1);
 		}
 		else if ($unit == "Kelvin")
 		{
-			$temperature = $temperature - 273.15;
+			array_push($temp_arr, 2);
 		}
-		write_comms(1, array($temperature));
+		else
+		{
+			array_push($temp_arr, 0);
+		}
+
+		if ($temperature > 999)
+			write_comms(5, $temp_arr);
+		else if ($temperature > 99)
+			write_comms(4, $temp_arr);
+		else if ($temperature > 9)
+			write_comms(3, $temp_arr);
+		else
+			write_comms(2, $temp_arr);
 	}
 ?>
 
@@ -63,11 +77,20 @@
 <head>
 	<title>Temperature Control!</title>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<style>
+	body, html {
+		text-align: center;
+	}
+	form {
+		display: inline-block;
+		text-align: center;
+	}
+	</style>
 </head>
 
 <body>
 
-	<h1> TEMPERATURE CONTROL</h1>
+	 <p style="text-align:center"><font size = 7 >Temperature Control</font></p>
 
 	<script type="text/javascript">
 	</script>
